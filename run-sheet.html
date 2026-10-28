@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Run sheet - AI Concepts in DevOps - Session 6</title>
+<style>
+  :root { --fg: #151a26; --muted: #5a6477; --border: #dde2ec; --accent: #5a43e0; --accent-2: #0a8a85; --warn: #b94a0c; --danger: #c41d4b; --ok: #1d7f37; }
+  body { max-width: 1040px; margin: 32px auto; padding: 0 24px; color: var(--fg); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; }
+  h1 { margin: 0 0 4px; font-size: 28px; letter-spacing: -0.02em; }
+  h2 { margin: 32px 0 10px; font-size: 19px; }
+  .meta, .muted { color: var(--muted); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 18px 0; }
+  .box { padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; }
+  .box h3 { margin: 0 0 6px; font-size: 13px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .box ul { margin: 0; padding-left: 18px; }
+  .big { font-size: 26px; font-weight: 800; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td.time { width: 52px; color: var(--accent); font-family: ui-monospace, Menlo, monospace; font-weight: 700; }
+  td.num { width: 34px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; }
+  td.min { width: 40px; text-align: right; font-family: ui-monospace, Menlo, monospace; }
+  tr.part td { padding-top: 18px; border-bottom: 2px solid var(--fg); font-size: 17px; font-weight: 800; }
+  .slot { float: right; color: var(--muted); font-family: ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 600; }
+  .presenter { margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: #ebe8fd; color: var(--accent); font-size: 12px; font-weight: 700; }
+  tr.break td { background: #f2f4f9; color: var(--muted); font-style: italic; }
+  tr.deep td { color: var(--muted); font-size: 13px; }
+  .note { color: var(--muted); font-size: 13px; }
+  .tag { margin-left: 4px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .tag.demo { background: #ddf3f1; color: var(--accent-2); }
+  .tag.play { background: #ebe8fd; color: var(--accent); }
+  .tag.skip { background: #fcede3; color: var(--warn); }
+  .tag.deep { background: #f2f4f9; color: var(--muted); }
+  .proposal { padding: 8px 12px; border-left: 4px solid var(--warn); background: #fcede3; }
+  @media print { body { margin: 0; max-width: none; font-size: 12px; } tr { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<h1>Run sheet · AI Concepts in DevOps</h1>
+<div class="meta">Session 6 · 1.3.27 · 17:00-21:00 · Noam Guy and Elhay Efrat · generated from the deck, so it always matches the slides</div>
+<div class="grid">
+  <div class="box"><h3>Planned talk time</h3><div class="big">202.5 min</div><div class="muted">plus 25 min of breaks, every part anchored to its agenda slot</div></div>
+  <div class="box"><h3>Buffer across parts</h3><div class="big">12.5 min</div><div class="muted">plus 15 min from the skip list; deep dives come out of the buffer</div></div>
+  <div class="box"><h3>Per part</h3><ul><li><strong>Opening</strong> 8 of 8 min</li><li><strong>What is an AI agent?</strong> 38 of 42 min</li><li><strong>How AI agents work</strong> 56.5 of 60 min</li><li><strong>AI in day-to-day DevOps work</strong> 35.5 of 40 min</li><li><strong>Demo: AI eval in CI/CD</strong> 56.5 of 57 min</li><li><strong>Wrap-up</strong> 8 of 8 min</li></ul></div>
+</div>
+<p class="proposal"><strong>Presenter split is a proposal</strong>, based on each bio: Noam takes the concepts and day-to-day parts, Elhay the agent internals and the eval pipeline. Agree it with Noam and edit PRESENTERS in run_sheet.py.</p>
+<h2>Running late? Skip these (15 min in total)</h2>
+<ul><li>#17 From autocomplete to agents <span class='muted'>saves 1.5 min</span></li><li>#23 The tools you&#x27;ll meet <span class='muted'>saves 2 min</span></li><li>#40 Give it what you&#x27;d give a senior colleague <span class='muted'>saves 2 min</span></li><li>#47 Subagents and memory <span class='muted'>saves 2 min</span></li><li>#62 AI on call: it gathers, you decide <span class='muted'>saves 3 min</span></li><li>#71 Unit test vs eval <span class='muted'>saves 1.5 min</span></li><li>#75 Tools for evals <span class='muted'>saves 1 min</span></li><li>#87 A reviewer that cries wolf gets ignored <span class='muted'>saves 2 min</span></li></ul>
+<h2>Before the session</h2>
+<ol><li>Local cluster up, course-app healthy in namespace course, kube context set to the ai-agent read-only identity for the agent demos.</li><li>Broken values ready: helm upgrade course-app ./chart -n course --set config.PORT=abc (and the restore command with 8080).</li><li>Anthropic credentials work: ant auth status, or ANTHROPIC_API_KEY exported in the demo terminal.</li><li>Demo repo cloned; three Demo A PRs and the bad and clean Demo B PRs opened the day before, with their checks already finished.</li><li>A Demo C PR with one failing unit test, ready for the @claude comment.</li><li>Grafana Explore open on Loki for the LogQL quick win; one red CI run ready for the gh run view pipe.</li><li>Deck and Eval Lab open from the local files (they work offline); browser zoom at 100%; second screen showing the speaker view (press S).</li><li>Phone hotspot as a network fallback; the Eval Lab covers Demos A, B and C if the network or the API is down.</li></ol>
+<h2>If a live demo fails</h2>
+<table><tr><td><strong>Demo 1 · broken pod</strong></td><td>Show the loop-in-action slide and walk the trace by hand; it is the same investigation.</td></tr><tr><td><strong>Demo 2 · 40-line agent</strong></td><td>Use the You are the harness playground: same steps, plus the context and cost meters.</td></tr><tr><td><strong>Quick wins</strong></td><td>Paste a saved failing CI log into any chat UI; for LogQL, show the query slide and its result screenshot.</td></tr><tr><td><strong>Demo A · eval gate</strong></td><td>The Eval Lab is the primary path anyway; show the finished red check from the PR opened the day before.</td></tr><tr><td><strong>Demo B · AI reviewer</strong></td><td>Open the PR that already has the review comment; then run the Be the reviewer playground.</td></tr><tr><td><strong>Demo C · agent fix</strong></td><td>Open the PR where the agent commit already landed and walk the gates that ran on it.</td></tr></table>
+<h2>Slide by slide</h2>
+<table>
+<tr class="part" data-part="Opening"><td colspan="4">Opening <span class="presenter">Both · Elhay opens</span> <span class="slot">17:00 - 17:08</span></td></tr>
+<tr class=""><td class="time">17:00</td><td class="num">1</td><td><strong>AI Concepts in DevOps</strong> <div class="note">Doors open, people settle.</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">17:00</td><td class="num">2</td><td><strong>Elhay Efrat</strong> <div class="note">Walk the timeline left to right: networking and virtualization, then DevOps, then MLOps, then AI-native products.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:02</td><td class="num">3</td><td><strong>Noam Guy</strong> <div class="note">Same layout as the previous slide so the two intros feel like a pair.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:04</td><td class="num">4</td><td><strong>Six weeks, one project</strong> <div class="note">Recap fast, 1 minute.</div></td><td class="min">1</td></tr>
+<tr class=""><td class="time">17:05</td><td class="num">5</td><td><strong>Agenda</strong> <div class="note">Point out the two breaks.</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">17:06</td><td class="num">6</td><td><strong>By 21:00 you will be able to</strong> <div class="note">These four goals map one-to-one to the four parts.</div></td><td class="min">1</td></tr>
+<tr class=""><td class="time">17:07</td><td class="num">7</td><td><strong>Where are you with AI?</strong> <div class="note">Reveal one question at a time and count hands.</div></td><td class="min">1</td></tr>
+<tr class="part" data-part="What is an AI agent?"><td colspan="4">What is an AI agent? <span class="presenter">Noam</span> <span class="slot">17:08 - 17:50</span></td></tr>
+<tr class=""><td class="time">17:08</td><td class="num">8</td><td><strong>What is an AI agent?</strong> <div class="note">Goal: everyone leaves Part 1 with a precise definition of &quot;agent&quot; and a healthy distrust of LLM output.</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">17:08</td><td class="num">9</td><td><strong>An LLM predicts the next token</strong> <div class="note">Demystify first.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:10</td><td class="num">10</td><td><strong>Turn up the temperature</strong> <span class="tag play">interactive</span><div class="note">The goal is to make &quot;non-deterministic&quot; and &quot;hallucination&quot; feel physical.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">17:13</td><td class="num">11</td><td><strong>Models read and bill in tokens</strong> <div class="note">DevOps people produce the most token-hungry data there is: logs, JSON, YAML, stack traces.</div></td><td class="min">2</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">12</td><td><strong>Train a BPE tokenizer, live</strong> <span class="tag play">interactive</span> <span class="tag deep">deep dive · optional</span><div class="note">Byte-pair encoding: start from characters and keep merging the most frequent adjacent pair into a new token.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">17:15</td><td class="num">13</td><td><strong>Count the tokens</strong> <span class="tag play">interactive</span><div class="note">1.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">17:18</td><td class="num">14</td><td><strong>It only knows what&#x27;s in the window</strong> <div class="note">The single most important mental model of the evening: output quality = model quality × context quality.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:20</td><td class="num">15</td><td><strong>Same question, three answers</strong> <div class="note">Ask the room: which one is wrong?</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:22</td><td class="num">16</td><td><strong>Real flag or hallucinated?</strong> <div class="note">Let the room vote on each line before revealing.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">17:25</td><td class="num">17</td><td><strong>From autocomplete to agents</strong> <span class="tag skip">skip if late</span><div class="note">Do not dwell on product names.</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">17:27</td><td class="num">18</td><td><strong>Talking about your system vs acting on it</strong> <div class="note">The last row is the one to remember.</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">17:28</td><td class="num">19</td><td><strong>Definition</strong> <div class="note">Write the four words on the whiteboard: model, tools, loop, goal.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:30</td><td class="num">20</td><td><strong>Workflow or agent?</strong> <div class="note">This is the most practical slide for DevOps.</div></td><td class="min">2.5</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">21</td><td><strong>Five workflow patterns before you need an agent</strong> <span class="tag deep">deep dive · optional</span><div class="note">Workflows are LLMs and tools orchestrated through predefined code paths; agents direct their own process and tool use.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">17:33</td><td class="num">22</td><td><strong>How much do you let it do?</strong> <div class="note">Same tool, different levels: Claude Code or Copilot can run at L3 on your laptop and at L5 in CI.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:35</td><td class="num">23</td><td><strong>The tools you&#x27;ll meet</strong> <span class="tag skip">skip if late</span><div class="note">Don&#x27;t turn this into a product comparison.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">17:37</td><td class="num">24</td><td><strong>Same broken pod, two ways</strong> <span class="tag demo">live demo</span><div class="note">Prep before the session: cluster up, course-app healthy, the broken values file ready.</div></td><td class="min">8</td></tr>
+<tr class=""><td class="time">17:45</td><td class="num">25</td><td><strong>Remember this</strong> <div class="note">Be strict with the break time, Part 2 is the densest hour.</div></td><td class="min">1</td></tr>
+<tr class="break"><td class="time">17:50</td><td></td><td>Break</td><td class="min">10</td></tr>
+<tr class="part" data-part="How AI agents work"><td colspan="4">How AI agents work <span class="presenter">Elhay</span> <span class="slot">18:00 - 19:00</span></td></tr>
+<tr class=""><td class="time">18:00</td><td class="num">26</td><td><strong>How AI agents work</strong> <div class="note">5 planned + buffer).</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">18:00</td><td class="num">27</td><td><strong>Three parts, every time</strong> <div class="note">When people compare &quot;Claude vs GPT&quot; they compare engines.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:02</td><td class="num">28</td><td><strong>Think, act, observe, repeat</strong> <div class="note">Walk the loop once slowly with a finger on each box.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">18:05</td><td class="num">29</td><td><strong>One real investigation, step by step</strong> <div class="note">Same scenario as Demo 1.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:07</td><td class="num">30</td><td><strong>The model never runs anything</strong> <div class="note">This is the exact wire format of the Anthropic Messages API, the one agent.</div></td><td class="min">2</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">31</td><td><strong>One tool call, three wire formats</strong> <span class="tag deep">deep dive · optional</span><div class="note">Same idea at every layer: a name, structured arguments, and an id that ties the result to the call.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">18:09</td><td class="num">32</td><td><strong>A tool is a name, a description and a schema</strong> <div class="note">Step through the highlights with the arrow key.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:11</td><td class="num">33</td><td><strong>The harness side: run tools, enforce rules</strong> <div class="note">Walk the highlights: The official Anthropic SDK.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">18:14</td><td class="num">34</td><td><strong>The loop: about 15 lines</strong> <div class="note">The punchline: that&#x27;s an agent.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">18:17</td><td class="num">35</td><td><strong>You just read every concept of this part</strong> <div class="note">Pause for questions here.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:19</td><td class="num">36</td><td><strong>What the model sees on every call</strong> <div class="note">This is why &quot;prompt engineering&quot; turned into &quot;context engineering&quot;: what you load into the window matters far more than how you phrase the question.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:21</td><td class="num">37</td><td><strong>Context is a budget</strong> <div class="note">Context rot is real and measurable: long, noisy sessions give worse answers than short focused ones.</div></td><td class="min">2</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">38</td><td><strong>What one agent run really costs</strong> <span class="tag play">interactive</span> <span class="tag deep">deep dive · optional</span><div class="note">Every step re-sends the whole history, so total input grows with N squared: N·S + (T+O)·N(N−1)/2.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">18:23</td><td class="num">39</td><td><strong>AGENTS.md: onboarding for your agent</strong> <div class="note">This is the cheapest improvement they can make tonight: add an AGENTS.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:25</td><td class="num">40</td><td><strong>Give it what you&#x27;d give a senior colleague</strong> <span class="tag skip">skip if late</span><div class="note">The five chips are a checklist they can reuse for every request, to an agent or to a human.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:27</td><td class="num">41</td><td><strong>Everything around the model</strong> <div class="note">Everything in the dashed box is normal, deterministic software that DevOps people already know how to secure, test and observe.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:29</td><td class="num">42</td><td><strong>Decide what runs without asking</strong> <div class="note">The sandbox matters more than the allowlist.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:31</td><td class="num">43</td><td><strong>You are the harness</strong> <span class="tag play">interactive</span><div class="note">This ties the whole of Part 2 together: loop, context budget and permissions in one picture.</div></td><td class="min">5</td></tr>
+<tr class=""><td class="time">18:36</td><td class="num">44</td><td><strong>Prompts are suggestions. Hooks are rules.</strong> <div class="note">Exit code 2 tells Claude Code to block the tool call and show the stderr message to the model, so it can choose another approach.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:38</td><td class="num">45</td><td><strong>MCP: one plug for every tool</strong> <div class="note">MCP (Model Context Protocol) was started by Anthropic in late 2024 and is now supported by all the major agents.</div></td><td class="min">2</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">46</td><td><strong>Inspect an MCP conversation</strong> <span class="tag play">interactive</span> <span class="tag deep">deep dive · optional</span><div class="note">Messages from the MCP 2026-07-28 spec, for a small read-only Kubernetes server.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">18:40</td><td class="num">47</td><td><strong>Subagents and memory</strong> <span class="tag skip">skip if late</span><div class="note">Keep this short, about 3 minutes.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:42</td><td class="num">48</td><td><strong>How agents go wrong</strong> <div class="note">Every mitigation on this slide is a harness or DevOps control, not a &quot;better prompt&quot;.</div></td><td class="min">2</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">49</td><td><strong>The industry&#x27;s list of LLM risks</strong> <span class="tag deep">deep dive · optional</span><div class="note">The 2025 edition of the OWASP list (genai.</div></td><td class="min"></td></tr>
+<tr class="deep"><td class="time"></td><td class="num">50</td><td><strong>Threat-model your agent</strong> <span class="tag play">interactive</span> <span class="tag deep">deep dive · optional</span><div class="note">1.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">18:44</td><td class="num">51</td><td><strong>Two stories from 2025</strong> <div class="note">Both widely reported in July 2025: the Replit agent incident (SaaStr&#x27;s database) and the Amazon Q Developer VS Code extension (version 1.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:46</td><td class="num">52</td><td><strong>When your logs talk back</strong> <div class="note">There is no reliable prompt-level fix for injection today.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">18:48</td><td class="num">53</td><td><strong>Run our 40-line agent</strong> <span class="tag demo">live demo</span><div class="note">Run with: uv run --with anthropic agent.</div></td><td class="min">7</td></tr>
+<tr class=""><td class="time">18:55</td><td class="num">54</td><td><strong>Remember this</strong> <div class="note">15-minute break.</div></td><td class="min">1</td></tr>
+<tr class="break"><td class="time">19:00</td><td></td><td>Break</td><td class="min">15</td></tr>
+<tr class="part" data-part="AI in day-to-day DevOps work"><td colspan="4">AI in day-to-day DevOps work <span class="presenter">Noam</span> <span class="slot">19:15 - 19:55</span></td></tr>
+<tr class=""><td class="time">19:15</td><td class="num">55</td><td><strong>AI in day-to-day DevOps work</strong> <div class="note">5 planned + buffer).</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">19:15</td><td class="num">56</td><td><strong>AI across the CI/CD loop</strong> <div class="note">Same six stages from session 1&#x27;s CI/CD overview.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">19:18</td><td class="num">57</td><td><strong>AI writes, tools verify, you approve</strong> <div class="note">This is the pattern for the whole part: AI drafts, deterministic tools verify, a human approves.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">19:21</td><td class="num">58</td><td><strong>Let it draft. Make the tools judge.</strong> <div class="note">Linters and scanners from sessions 2-5 now get a second job: they check the AI&#x27;s work.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">19:23</td><td class="num">59</td><td><strong>Be the reviewer</strong> <span class="tag play">interactive</span><div class="note">1.</div></td><td class="min">4</td></tr>
+<tr class=""><td class="time">19:27</td><td class="num">60</td><td><strong>Pipe the problem into the model</strong> <div class="note">This is the lowest-friction way to start: no new tool, just a pipe.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">19:30</td><td class="num">61</td><td><strong>Ask your metrics in plain English</strong> <div class="note">Adjust the metric names to the ones the course app exposes from session 5.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">19:33</td><td class="num">62</td><td><strong>AI on call: it gathers, you decide</strong> <span class="tag skip">skip if late</span><div class="note">This is how mature teams use AI in incidents today: gather and summarize, never act alone in production.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">19:36</td><td class="num">63</td><td><strong>Three quick wins</strong> <span class="tag demo">live demo</span><div class="note">Prepare a branch with a broken test pushed in advance, so the CI run is already red when you get here.</div></td><td class="min">5</td></tr>
+<tr class=""><td class="time">19:41</td><td class="num">64</td><td><strong>Six rules for AI at work</strong> <div class="note">If they remember one slide from Part 3, this is the one.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">19:44</td><td class="num">65</td><td><strong>A read-only Kubernetes identity for your agent</strong> <div class="note">Use what they learned in session 4.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">19:47</td><td class="num">66</td><td><strong>&quot;It worked when I tried it&quot;</strong> <div class="note">The bridge into Part 4.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">19:49</td><td class="num">67</td><td><strong>Remember this</strong> <div class="note">Move straight into Part 4, no break.</div></td><td class="min">1</td></tr>
+<tr class="part" data-part="Demo: AI eval in CI/CD"><td colspan="4">Demo: AI eval in CI/CD <span class="presenter">Elhay</span> <span class="slot">19:55 - 20:52</span></td></tr>
+<tr class=""><td class="time">19:55</td><td class="num">68</td><td><strong>Demo: AI eval in CI/CD</strong> <div class="note">The Eval Lab is the safe fallback for any live demo.</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">19:55</td><td class="num">69</td><td><strong>Three ways AI enters the pipeline</strong> <div class="note">Connect to the workflow vs agent slide from Part 1: A and B are workflows (fixed steps, one LLM call), C is a real agent.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">19:57</td><td class="num">70</td><td><strong>An eval is a test suite for behavior</strong> <div class="note">Draw the parallel: dataset = test cases, graders = asserts, gate = required status check.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">19:59</td><td class="num">71</td><td><strong>Unit test vs eval</strong> <span class="tag skip">skip if late</span><div class="note">The threshold row usually sparks a question: &quot;why not 100%?</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">20:01</td><td class="num">72</td><td><strong>Use the cheapest grader that catches the failure</strong> <div class="note">Juniors tend to reach for LLM-as-judge for everything.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">20:03</td><td class="num">73</td><td><strong>LLM as a judge</strong> <div class="note">The judge is itself an AI component.</div></td><td class="min">2</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">74</td><td><strong>Can you trust your judge?</strong> <span class="tag play">interactive</span> <span class="tag deep">deep dive · optional</span><div class="note">40 answers with a human label, scored by a simulated judge.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">20:05</td><td class="num">75</td><td><strong>Tools for evals</strong> <span class="tag skip">skip if late</span><div class="note">The tool doesn&#x27;t matter much.</div></td><td class="min">1</td></tr>
+<tr class=""><td class="time">20:06</td><td class="num">76</td><td><strong>An AI feature in our app: /explain</strong> <div class="note">A realistic small AI feature: paste an error, get a structured explanation.</div></td><td class="min">2</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">77</td><td><strong>Make the JSON a guarantee, not a hope</strong> <span class="tag deep">deep dive · optional</span><div class="note">messages.</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">20:08</td><td class="num">78</td><td><strong>evals/promptfooconfig.yaml</strong> <div class="note">Step through the highlights.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">20:10</td><td class="num">79</td><td><strong>Real errors, specific checks</strong> <div class="note">Each case is a real error they&#x27;ve seen during this course.</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">20:11</td><td class="num">80</td><td><strong>.github/workflows/ai-evals.yml</strong> <div class="note">promptfoo is a dev dependency in package.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">20:13</td><td class="num">81</td><td><strong>Eval Lab</strong> <div class="note">Eval Lab: about 8 minutes, the main Demo A, and the safe fallback for Demos A, B and C if GitHub Actions is slow.</div></td><td class="min">8</td></tr>
+<tr class=""><td class="time">20:21</td><td class="num">82</td><td><strong>Demo A: break it, catch it, fix it</strong> <span class="tag demo">live demo</span><div class="note">Prepare all three PRs in advance and let their checks finish before the session; GitHub Actions queues can be slow.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">20:24</td><td class="num">83</td><td><strong>Evals that don&#x27;t become flaky tests</strong> <div class="note">This slide is the difference between an eval suite people trust and one they learn to re-run until it&#x27;s green.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">20:26</td><td class="num">84</td><td><strong>An AI reviewer for infra changes</strong> <div class="note">The checklist is the same one a senior DevOps engineer applies in review.</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">20:28</td><td class="num">85</td><td><strong>.github/workflows/ai-review.yml</strong> <div class="note">The env: pattern prevents script injection: a branch name like $(curl evil) would otherwise execute.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">20:30</td><td class="num">86</td><td><strong>scripts/ai_review.py: one call, input fenced</strong> <div class="note">The reviewer checklist lives in prompts/reviewer.</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">20:31</td><td class="num">87</td><td><strong>A reviewer that cries wolf gets ignored</strong> <span class="tag skip">skip if late</span><div class="note">Most AI reviewers fail on precision: they comment on everything, so people stop reading them.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">20:33</td><td class="num">88</td><td><strong>Demo B: review a bad PR</strong> <span class="tag demo">live demo</span><div class="note">Step 3 brings back the prompt injection lesson from Part 2, now in CI.</div></td><td class="min">6</td></tr>
+<tr class=""><td class="time">20:39</td><td class="num">89</td><td><strong>An agent proposes, the gates decide</strong> <div class="note">Permissions match the action&#x27;s official example: id-token: write for the GitHub App token exchange, actions: read so it can read CI results on the PR.</div></td><td class="min">2</td></tr>
+<tr class=""><td class="time">20:41</td><td class="num">90</td><td><strong>Autonomous, inside a box</strong> <div class="note">Live demo, about 6 of this slide&#x27;s 8 minutes: break a unit test on a PR, comment @claude make the failing test pass without changing the test, watch the action run, then show the g</div></td><td class="min">8</td></tr>
+<tr class="deep"><td class="time"></td><td class="num">91</td><td><strong>Seven controls for every AI job in CI</strong> <span class="tag deep">deep dive · optional</span><div class="note">Every workflow tonight follows these: Demo A (paths filter, one secret on one step, pass-rate gate), Demo B (SHA pin, comment-only, env indirection), Demo C (timeout, max turns, br</div></td><td class="min"></td></tr>
+<tr class=""><td class="time">20:49</td><td class="num">92</td><td><strong>Your pipeline, with AI in it</strong> <div class="note">This is the slide to leave on screen while taking questions about Part 4.</div></td><td class="min">2</td></tr>
+<tr class="part" data-part="Wrap-up"><td colspan="4">Wrap-up <span class="presenter">Both</span> <span class="slot">20:52 - 21:00</span></td></tr>
+<tr class=""><td class="time">20:52</td><td class="num">93</td><td><strong>Eight questions, one evening</strong> <span class="tag play">interactive</span><div class="note">Read each question, let the room shout or raise hands for A to D, then click the majority answer.</div></td><td class="min">3</td></tr>
+<tr class=""><td class="time">20:55</td><td class="num">94</td><td><strong>Key takeaways</strong> <div class="note">Go back to the four goals from the opening and check them off out loud.</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">20:56</td><td class="num">95</td><td><strong>Your next steps</strong> <div class="note">The playgrounds and the Eval Lab run in any browser, offline.</div></td><td class="min">1.5</td></tr>
+<tr class=""><td class="time">20:58</td><td class="num">96</td><td><strong>Resources</strong> <div class="note">Share the deck file in the course channel so the links are clickable.</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">20:58</td><td class="num">97</td><td><strong>Session 7: Cloud and what&#x27;s next?</strong> <div class="note">Tease: &quot;how you use AI safely&quot; is now a common interview topic.</div></td><td class="min">0.5</td></tr>
+<tr class=""><td class="time">20:59</td><td class="num">98</td><td><strong>Questions?</strong> <div class="note">Leave 5 or more minutes for Q&amp;A.</div></td><td class="min">1</td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cheat sheet - AI Concepts in DevOps - Session 6</title>
+  <style>
+:root {
+  --bg: #fbfbfd;
+  --fg: #151a26;
+  --muted: #5a6477;
+  --card: #ffffff;
+  --card-2: #f2f4f9;
+  --border: #dde2ec;
+  --accent: #5a43e0;
+  --accent-soft: #ebe8fd;
+  --accent-2: #0a8a85;
+  --accent-2-soft: #ddf3f1;
+  --warn: #b94a0c;
+  --warn-soft: #fcede3;
+  --danger: #c41d4b;
+  --danger-soft: #fce7ed;
+  --ok: #1d7f37;
+  --ok-soft: #e2f4e7;
+  --code-bg: #0f1422;
+  --code-fg: #e4e8f1;
+  --code-muted: #7d8799;
+  --shadow: 0 8px 24px rgba(21, 26, 38, 0.07);
+  --section-glow: radial-gradient(1200px 600px at 85% 15%, #ebe8fd 0%, transparent 60%),
+    radial-gradient(900px 500px at 10% 95%, #ddf3f1 0%, transparent 55%);
+
+  --r-background-color: var(--bg);
+  --r-main-color: var(--fg);
+  --r-heading-color: var(--fg);
+  --r-link-color: var(--accent);
+  --r-link-color-hover: var(--accent-2);
+  --r-selection-background-color: var(--accent);
+  --r-selection-color: #fff;
+  --r-main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --r-heading-font: var(--r-main-font);
+  --r-code-font: "JetBrains Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --r-main-font-size: 28px;
+  --r-block-margin: 14px;
+  --r-heading-margin: 0 0 18px 0;
+  --r-heading-font-weight: 760;
+  --r-heading-line-height: 1.12;
+  --r-heading-letter-spacing: -0.02em;
+  --r-heading-text-transform: none;
+  --r-heading-text-shadow: none;
+  --r-heading1-text-shadow: none;
+  --r-heading1-size: 2.5em;
+  --r-heading2-size: 1.55em;
+  --r-heading3-size: 1em;
+  --r-heading4-size: 0.85em;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b0f17;
+  --fg: #e7ebf3;
+  --muted: #9ba5b7;
+  --card: #131924;
+  --card-2: #18202e;
+  --border: #263044;
+  --accent: #9a8cff;
+  --accent-soft: #221d44;
+  --accent-2: #33c6bd;
+  --accent-2-soft: #0f2d2c;
+  --warn: #fb9a4b;
+  --warn-soft: #36210f;
+  --danger: #ff7a9c;
+  --danger-soft: #37141f;
+  --ok: #57d98a;
+  --ok-soft: #11301d;
+  --code-bg: #070a11;
+  --shadow: none;
+  --section-glow: radial-gradient(1200px 600px at 85% 15%, #221d44 0%, transparent 60%),
+    radial-gradient(900px 500px at 10% 95%, #0f2d2c 0%, transparent 55%);
+}
+
+html.print-pdf {
+  --shadow: none;
+  --section-glow: linear-gradient(transparent, transparent);
+}
+
+.reveal-viewport {
+  background: var(--bg);
+  transition: background-color 0.2s;
+}
+
+.reveal-viewport.is-section,
+.reveal-viewport.is-title {
+  background: var(--section-glow), var(--bg);
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+  font-size: var(--r-main-font-size);
+  color: var(--r-main-color);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 40px 64px 56px;
+  line-height: 1.35;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+  margin: var(--r-heading-margin);
+  color: var(--r-heading-color);
+  font-family: var(--r-heading-font);
+  font-weight: var(--r-heading-font-weight);
+  line-height: var(--r-heading-line-height);
+  letter-spacing: var(--r-heading-letter-spacing);
+  text-transform: var(--r-heading-text-transform);
+}
+
+.reveal h1 { font-size: var(--r-heading1-size); }
+.reveal h2 { font-size: var(--r-heading2-size); }
+.reveal h3 { font-size: var(--r-heading3-size); margin-bottom: 8px; }
+.reveal h4 { font-size: var(--r-heading4-size); margin-bottom: 6px; }
+
+.reveal p { margin: var(--r-block-margin) 0; line-height: 1.4; }
+.reveal strong { font-weight: 700; }
+.reveal em { font-style: italic; }
+.reveal a { color: var(--r-link-color); text-decoration: none; }
+.reveal a:hover { color: var(--r-link-color-hover); }
+
+.reveal ul,
+.reveal ol {
+  display: block;
+  margin: 0 0 0 1.1em;
+  padding: 0;
+}
+
+.reveal li { margin: 0.32em 0; }
+.reveal li::marker { color: var(--accent); }
+.reveal ul ul, .reveal ol ul { margin-top: 0.2em; font-size: 0.88em; }
+
+.reveal .eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 0.52em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.reveal .lead {
+  color: var(--muted);
+  font-size: 0.86em;
+  line-height: 1.45;
+}
+
+.reveal .muted { color: var(--muted); }
+.reveal .small { font-size: 0.68em; }
+.reveal .tiny { font-size: 0.55em; }
+.reveal .center { text-align: center; }
+.reveal .accent { color: var(--accent); }
+.reveal .accent-2 { color: var(--accent-2); }
+.reveal .ok { color: var(--ok); }
+.reveal .warn { color: var(--warn); }
+.reveal .danger { color: var(--danger); }
+
+.reveal code {
+  font-family: var(--r-code-font);
+  text-transform: none;
+}
+
+.reveal :not(pre) > code {
+  padding: 0.08em 0.36em;
+  border-radius: 6px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  font-size: 0.84em;
+}
+
+.reveal pre {
+  position: relative;
+  width: 100%;
+  margin: 12px 0;
+  border-radius: 14px;
+  background: var(--code-bg);
+  box-shadow: none;
+  font-family: var(--r-code-font);
+  font-size: 0.64em;
+  line-height: 1.5;
+}
+
+.reveal pre code,
+html:not(.print-pdf) .reveal .hljs {
+  display: block;
+  max-height: 560px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-size: 1em;
+  white-space: pre;
+  word-break: normal;
+  overflow: hidden;
+}
+
+.reveal pre.compact { font-size: 0.56em; }
+.reveal pre.xcompact { font-size: 0.5em; }
+.reveal pre.wrap code { white-space: pre-wrap; }
+
+.reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 0.32; }
+.reveal .hljs-ln-numbers { color: var(--code-muted); }
+
+.hljs-comment, .hljs-quote { color: #7d8799; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-built_in.hljs-keyword, .hljs-meta .hljs-keyword { color: #c792ea; }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-template-tag { color: #a5d6a7; }
+.hljs-number, .hljs-literal, .hljs-symbol, .hljs-bullet { color: #f6b26b; }
+.hljs-title, .hljs-title.function_, .hljs-section { color: #82aaff; }
+.hljs-attr, .hljs-attribute, .hljs-property, .hljs-selector-attr { color: #7fdbca; }
+.hljs-built_in, .hljs-type, .hljs-title.class_ { color: #ffcb6b; }
+.hljs-variable, .hljs-template-variable, .hljs-params { color: #e4e8f1; }
+.hljs-meta, .hljs-meta .hljs-string { color: #89ddff; }
+.hljs-deletion { color: #ff8a9a; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8em;
+}
+
+.reveal table th,
+.reveal table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reveal table th {
+  color: var(--muted);
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.reveal table tbody tr:last-child td { border-bottom: none; }
+
+.reveal .grid-2,
+.reveal .grid-3,
+.reveal .grid-4 {
+  display: grid;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.reveal .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.reveal .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.reveal .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.reveal .grid-2.wide-left { grid-template-columns: 1.35fr 1fr; }
+.reveal .grid-2.wide-right { grid-template-columns: 1fr 1.35fr; }
+.reveal .align-center { align-items: center; }
+
+.reveal .card {
+  box-sizing: border-box;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: 0.76em;
+  line-height: 1.42;
+}
+
+.reveal .card > :first-child { margin-top: 0; }
+.reveal .card > :last-child { margin-bottom: 0; }
+.reveal .card h3 { font-size: 1.12em; }
+.reveal .card p { margin: 6px 0; }
+.reveal .card ul { margin-left: 1em; }
+.reveal .card li { margin: 0.2em 0; }
+.reveal .card .label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reveal .card.is-accent { border-color: var(--accent); background: var(--accent-soft); }
+.reveal .card.is-accent-2 { border-color: var(--accent-2); background: var(--accent-2-soft); }
+.reveal .card.is-warn { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .card.is-danger { border-color: var(--danger); background: var(--danger-soft); }
+.reveal .card.is-ok { border-color: var(--ok); background: var(--ok-soft); }
+
+.reveal .callout {
+  margin: 16px 0 0;
+  padding: 14px 20px;
+  border-left: 5px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-soft);
+  font-size: 0.78em;
+  line-height: 1.42;
+}
+
+.reveal .callout.is-warn { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .callout.is-danger { border-color: var(--danger); background: var(--danger-soft); }
+.reveal .callout.is-ok { border-color: var(--ok); background: var(--ok-soft); }
+
+.reveal .chip {
+  display: inline-block;
+  margin: 3px 4px 3px 0;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card-2);
+  font-size: 0.82em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.reveal .chip.is-accent { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+.reveal .chip.is-accent-2 { border-color: var(--accent-2); background: var(--accent-2-soft); color: var(--accent-2); font-weight: 650; }
+.reveal .chip.is-ok { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); font-weight: 650; }
+.reveal .chip.is-danger { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); font-weight: 650; }
+.reveal .chip.is-warn { border-color: var(--warn); background: var(--warn-soft); color: var(--warn); font-weight: 650; }
+
+.reveal .flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 18px 0;
+}
+
+.reveal .flow .node {
+  flex: 1 1 0;
+  box-sizing: border-box;
+  padding: 14px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: 0.64em;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.reveal .flow .node strong { display: block; margin-bottom: 4px; font-size: 1.12em; }
+.reveal .flow .node .muted { font-size: 0.92em; }
+.reveal .flow .node.is-accent { border-color: var(--accent); background: var(--accent-soft); }
+.reveal .flow .node.is-accent-2 { border-color: var(--accent-2); background: var(--accent-2-soft); }
+.reveal .flow .node.is-ok { border-color: var(--ok); background: var(--ok-soft); }
+.reveal .flow .node.is-warn { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .flow .node.is-danger { border-color: var(--danger); background: var(--danger-soft); }
+
+.reveal .flow .arrow {
+  display: flex;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.8em;
+}
+
+.reveal .flow .arrow::before { content: "\2192"; }
+
+.reveal .badge {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+.reveal .badge.is-accent-2 { background: var(--accent-2); }
+.reveal .badge.is-muted { background: var(--muted); }
+
+.reveal .slides section.title-slide,
+.reveal .slides section.section-slide {
+  padding: 64px 88px;
+}
+
+.reveal .stage {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.reveal .title-slide h1 { margin: 6px 0 18px; font-size: 2.9em; line-height: 1.02; }
+.reveal .title-slide .lead { max-width: 820px; font-size: 0.95em; }
+.reveal .title-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 34px;
+  font-size: 0.66em;
+}
+
+.reveal .title-meta > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+}
+
+.reveal .section-slide .section-number {
+  margin: 0;
+  color: var(--accent);
+  font-size: 3.4em;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.reveal .section-slide h2 { margin: 10px 0 14px; font-size: 2.2em; }
+.reveal .section-slide .lead { max-width: 900px; }
+.reveal .section-slide .chips { margin-top: 20px; font-size: 0.72em; }
+
+.reveal .slides section.bio-slide { padding-top: 30px; }
+.reveal .bio-head { display: flex; align-items: center; gap: 30px; margin: 2px 0 16px; }
+.reveal .bio-head h2 { margin: 0 0 2px; font-size: 1.75em; }
+.reveal .bio-head .role { margin: 0 0 8px; color: var(--accent); font-size: 0.76em; font-weight: 700; }
+.reveal .bio-tagline { margin: 0; font-size: 0.56em; }
+
+.reveal .avatar {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  vertical-align: middle;
+}
+
+.reveal .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; }
+.reveal .avatar.is-lg { width: 150px; height: 150px; font-size: 1.7em; box-shadow: 0 0 0 5px var(--bg), 0 0 0 8px var(--accent-2); }
+.reveal .avatar.is-xs { width: 30px; height: 30px; margin-right: 10px; font-size: 11px; }
+
+.reveal .bio-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.reveal .bio-stats .stat { padding: 12px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); box-shadow: var(--shadow); }
+.reveal .bio-stats strong { display: block; color: var(--accent); font-size: 1.15em; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.reveal .bio-stats span { display: block; margin-top: 5px; color: var(--muted); font-size: 0.52em; line-height: 1.3; }
+
+.reveal .career { position: relative; display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: 12px; margin: 14px 0 14px; padding-top: 18px; }
+.reveal .career::before { content: ""; position: absolute; top: 6px; right: 0; left: 0; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+.reveal .career .stop { position: relative; font-size: 0.5em; line-height: 1.3; }
+.reveal .career .stop::before { content: ""; position: absolute; top: -18px; left: 0; width: 13px; height: 13px; border: 3px solid var(--bg); border-radius: 50%; background: var(--accent); }
+.reveal .career .stop.is-now::before { background: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
+.reveal .career .yr { display: block; color: var(--muted); font-family: var(--r-code-font); font-weight: 700; }
+.reveal .career strong { display: block; margin: 1px 0 2px; font-size: 1.3em; }
+.reveal .career .stop > span:last-child { color: var(--muted); }
+
+.reveal .bio-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.reveal .bio-cards .card { font-size: 0.6em; }
+
+.reveal .todo {
+  padding: 1px 8px;
+  border: 1.5px dashed var(--warn);
+  border-radius: 8px;
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.reveal .agenda { width: 100%; margin-top: 8px; font-size: 0.74em; }
+.reveal .agenda td { padding: 9px 14px; }
+.reveal .agenda td:first-child { width: 170px; color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; white-space: nowrap; }
+.reveal .agenda td:nth-child(2) { width: 46px; color: var(--accent); font-weight: 800; }
+.reveal .agenda tr.is-break td { color: var(--muted); font-style: italic; }
+.reveal .agenda .sub { display: block; color: var(--muted); font-size: 0.82em; }
+
+.reveal .journey {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.reveal .journey .stop {
+  box-sizing: border-box;
+  padding: 14px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  font-size: 0.6em;
+  line-height: 1.35;
+}
+
+.reveal .journey .stop .num { color: var(--muted); font-size: 0.9em; font-weight: 700; }
+.reveal .journey .stop strong { display: block; margin: 4px 0 6px; font-size: 1.14em; }
+.reveal .journey .stop.is-done { opacity: 0.78; }
+.reveal .journey .stop.is-now { border: 2px solid var(--accent); background: var(--accent-soft); opacity: 1; }
+.reveal .journey .stop.is-now .num { color: var(--accent); }
+
+.reveal .terminal {
+  margin: 14px 0;
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--r-code-font);
+  font-size: 0.56em;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.reveal .terminal .t-goal { color: #ffcb6b; font-weight: 700; }
+.reveal .terminal .t-step { color: #7d8799; }
+.reveal .terminal .t-call { color: #82aaff; }
+.reveal .terminal .t-out { color: #a5d6a7; }
+.reveal .terminal .t-err { color: #ff8a9a; }
+.reveal .terminal .t-done { color: #c792ea; font-weight: 700; }
+
+.reveal .bars { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; font-size: 0.7em; }
+.reveal .bars .row { display: grid; grid-template-columns: 200px 1fr 70px; gap: 12px; align-items: center; }
+.reveal .bars .row code { font-size: 1em; }
+.reveal .bars .bar { height: 30px; border-radius: 7px; background: var(--accent); }
+.reveal .bars .row:not(:first-child) .bar { background: var(--accent-2); opacity: 0.75; }
+.reveal .bars .pct { color: var(--muted); font-family: var(--r-code-font); }
+
+.reveal .tokens { display: flex; flex-wrap: wrap; gap: 4px; margin: 14px 0; font-family: var(--r-code-font); font-size: 0.7em; }
+.reveal .tokens span { padding: 5px 4px; border-radius: 6px; white-space: pre; }
+.reveal .tokens span:nth-child(5n + 1) { background: #e6e1ff; color: #2b1d8f; }
+.reveal .tokens span:nth-child(5n + 2) { background: #d4f2ee; color: #064d49; }
+.reveal .tokens span:nth-child(5n + 3) { background: #ffe4cc; color: #7a3306; }
+.reveal .tokens span:nth-child(5n + 4) { background: #fdd9e4; color: #7c0f30; }
+.reveal .tokens span:nth-child(5n + 5) { background: #dcebff; color: #0f3b78; }
+
+.reveal .stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
+.reveal .stack .layer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+}
+
+.reveal .stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
+.reveal .stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
+
+.reveal .harness {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  border: 2px dashed var(--accent-2);
+  border-radius: 22px;
+  background: var(--accent-2-soft);
+}
+
+.reveal .harness .cell {
+  box-sizing: border-box;
+  padding: 18px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 0.66em;
+  line-height: 1.35;
+}
+
+.reveal .harness .cell strong { display: block; margin-bottom: 3px; font-size: 1.1em; }
+.reveal .harness .cell.is-model {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--accent);
+  background: var(--accent-soft);
+  text-align: center;
+}
+
+.reveal .harness .cell.is-model strong { color: var(--accent); font-size: 1.6em; }
+
+.reveal .ladder { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-items: end; margin-top: 18px; }
+.reveal .ladder .step {
+  box-sizing: border-box;
+  padding: 14px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px 14px 6px 6px;
+  background: var(--card);
+  font-size: 0.62em;
+  line-height: 1.35;
+}
+
+.reveal .ladder .step .lvl { color: var(--accent); font-size: 0.9em; font-weight: 800; }
+.reveal .ladder .step strong { display: block; margin: 3px 0 6px; font-size: 1.12em; }
+.reveal .ladder .step:nth-child(1) { min-height: 150px; }
+.reveal .ladder .step:nth-child(2) { min-height: 190px; }
+.reveal .ladder .step:nth-child(3) { min-height: 230px; }
+.reveal .ladder .step:nth-child(4) { min-height: 270px; border-color: var(--warn); }
+.reveal .ladder .step:nth-child(5) { min-height: 310px; border-color: var(--danger); }
+
+.reveal .timeline { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-top: 34px; }
+.reveal .timeline::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+.reveal .timeline .event { position: relative; padding-top: 38px; font-size: 0.66em; line-height: 1.35; }
+.reveal .timeline .event::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.reveal .timeline .event .year { color: var(--accent); font-size: 1.3em; font-weight: 800; }
+.reveal .timeline .event strong { display: block; margin: 2px 0 6px; font-size: 1.1em; }
+
+.reveal .quiz { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+.reveal .quiz .q {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 18px;
+  align-items: center;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.reveal .quiz .q code { border: none; background: none; font-size: 0.8em; }
+.reveal .quiz .q .answer { font-size: 0.66em; }
+
+.reveal .trifecta { position: relative; width: 420px; height: 410px; margin: 0 auto; }
+.reveal .trifecta .circle {
+  position: absolute;
+  display: flex;
+  width: 240px;
+  height: 240px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: 34px;
+  border: 2px solid var(--danger);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--danger-soft) 70%, transparent);
+  font-size: 0.6em;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.reveal .trifecta .c1 { top: 0; left: 0; align-items: flex-start; padding: 64px 74px 0 26px; }
+.reveal .trifecta .c2 { top: 0; left: 180px; align-items: flex-start; padding: 64px 26px 0 74px; }
+.reveal .trifecta .c3 { top: 170px; left: 90px; align-items: flex-end; padding-bottom: 52px; }
+.reveal .trifecta .core {
+  position: absolute;
+  top: 186px;
+  left: 160px;
+  width: 100px;
+  color: var(--danger);
+  font-size: 0.58em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 800;
+  text-align: center;
+}
+
+.reveal .loop-svg { width: 100%; height: auto; }
+.reveal .loop-svg text { font-family: var(--r-main-font); fill: var(--fg); }
+.reveal .loop-svg .node-box { fill: var(--card); stroke: var(--border); stroke-width: 1.5; }
+.reveal .loop-svg .node-box.is-model { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2.5; }
+.reveal .loop-svg .node-box.is-harness { fill: var(--accent-2-soft); stroke: var(--accent-2); stroke-width: 2.5; }
+.reveal .loop-svg .node-box.is-done { fill: var(--ok-soft); stroke: var(--ok); stroke-width: 2.5; }
+.reveal .loop-svg .edge { fill: none; stroke: var(--muted); stroke-width: 2.5; }
+.reveal .loop-svg .edge.is-exit { stroke: var(--ok); stroke-dasharray: 7 6; }
+.reveal .loop-svg .arrowhead { fill: var(--muted); }
+.reveal .loop-svg .arrowhead.is-exit { fill: var(--ok); }
+.reveal .loop-svg .title { font-size: 21px; font-weight: 750; }
+.reveal .loop-svg .sub { font-size: 16px; fill: var(--muted); }
+.reveal .loop-svg .edge-label { font-size: 15px; fill: var(--muted); font-weight: 600; }
+
+.reveal .takeaways { counter-reset: tk; margin: 8px 0 0; list-style: none; font-size: 0.86em; }
+.reveal .takeaways li {
+  position: relative;
+  margin: 0 0 14px;
+  padding: 12px 18px 12px 66px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  counter-increment: tk;
+}
+
+.reveal .takeaways li::before {
+  content: counter(tk);
+  position: absolute;
+  top: 50%;
+  left: 18px;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7em;
+  font-weight: 800;
+  transform: translateY(-50%);
+}
+
+.reveal .demo-steps { counter-reset: ds; margin: 6px 0 0; list-style: none; font-size: 0.8em; }
+.reveal .demo-steps li {
+  position: relative;
+  margin: 0 0 12px;
+  padding: 10px 16px 10px 58px;
+  border-left: 3px solid var(--accent-2);
+  counter-increment: ds;
+}
+
+.reveal .demo-steps li::before {
+  content: counter(ds);
+  position: absolute;
+  top: 9px;
+  left: 14px;
+  display: flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 0.78em;
+  font-weight: 800;
+}
+
+.reveal .demo-tag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 12px;
+  border-radius: 8px;
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 0.42em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.reveal .quote {
+  margin: 20px 0;
+  font-size: 1.25em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.reveal .quote .who { display: block; margin-top: 10px; color: var(--muted); font-size: 0.5em; font-weight: 500; }
+
+.reveal .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.reveal .vs .card .label { font-size: 0.8em; }
+
+.reveal .fragment.fade-dim.visible { opacity: 0.35; }
+
+.deck-footer {
+  position: fixed;
+  bottom: 14px;
+  left: 22px;
+  z-index: 30;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.reveal-viewport.is-title .deck-footer,
+.reveal-viewport.is-section .deck-footer { display: none; }
+
+.reveal .slide-number {
+  right: 18px;
+  bottom: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--r-code-font);
+  font-size: 12px;
+}
+
+.reveal .progress { height: 4px; color: var(--accent); background: transparent; }
+.reveal .controls { color: var(--accent); }
+
+</style>
+  <style>
+.cheat {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 32px 40px;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--r-main-font);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.cheat header { margin-bottom: 18px; padding-bottom: 12px; border-bottom: 3px solid var(--accent); }
+.cheat h1 { margin: 0; font-size: 26px; letter-spacing: -0.02em; }
+.cheat header p { margin: 4px 0 0; color: var(--muted); }
+.cheat .columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 14px 22px; align-items: start; }
+
+.cheat section {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  break-inside: avoid;
+}
+
+.cheat h2 { margin: 0 0 6px; color: var(--accent); font-size: 15px; }
+.cheat h3 { margin: 8px 0 4px; font-size: 13.5px; }
+.cheat p { margin: 4px 0; }
+.cheat ul,
+.cheat ol { margin: 4px 0; padding-left: 20px; }
+.cheat li { margin: 2px 0; }
+.cheat .muted { color: var(--muted); font-size: 12.5px; }
+.cheat code { padding: 0 4px; border-radius: 4px; background: var(--card-2); font-family: var(--r-code-font); font-size: 12px; }
+
+.cheat pre {
+  margin: 6px 0;
+  padding: 8px 10px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--r-code-font);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre;
+}
+
+.cheat .owasp { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px; padding-left: 0; list-style: none; }
+.cheat section.wide { grid-column: 1 / -1; }
+.cheat .links { color: var(--muted); font-family: var(--r-code-font); font-size: 11.5px; }
+
+@media print {
+  @page { size: A4; margin: 12mm; }
+  .cheat { max-width: none; padding: 0; font-size: 11px; }
+  .cheat pre { font-size: 9.5px; }
+}
+
+</style>
+</head>
+<body class="cheat">
+  <header>
+    <h1>AI Concepts in DevOps · cheat sheet</h1>
+    <p>DevOps Course · Session 6 · 1.3.27 · Noam Guy and Elhay Efrat</p>
+  </header>
+  <main class="columns">
+    <section>
+      <h2>The agent in one picture</h2>
+      <p><strong>Agent</strong> = model + tools + loop + goal. <strong>Model</strong> decides, <strong>context</strong> is everything it sees on this call, <strong>harness</strong> runs the loop, executes tools and enforces rules.</p>
+      <ol>
+        <li>Send the context to the model</li>
+        <li>The model replies with a tool call or a final answer</li>
+        <li>The harness checks permissions and runs the tool</li>
+        <li>The output is appended to the context; repeat</li>
+      </ol>
+      <p class="muted">Stop conditions: goal done, max steps, budget or time limit, needs a human.</p>
+    </section>
+
+    <section class="wide">
+      <h2>A minimal agent loop (Anthropic SDK)</h2>
+<pre>def run_agent(goal: str, max_steps: int = 10) -> str:
+    messages = [{"role": "user", "content": goal}]
+    for _ in range(max_steps):
+        response = client.messages.create(
+            model=MODEL, max_tokens=16000, system=SYSTEM,
+            tools=TOOLS, messages=messages,
+        )
+        messages.append({"role": "assistant", "content": response.content})
+        if response.stop_reason != "tool_use":
+            text = (b.text for b in response.content if b.type == "text")
+            return next(text, f"Stopped: {response.stop_reason}")
+        results = []
+        for call in (b for b in response.content if b.type == "tool_use"):
+            output = run_kubectl(call.input["args"])
+            results.append({"type": "tool_result",
+                            "tool_use_id": call.id, "content": output})
+        messages.append({"role": "user", "content": results})
+    return "Stopped: step limit reached without an answer"</pre>
+      <p class="muted">Append the whole <code>response.content</code>, thinking blocks included. Run with <code>uv run --with anthropic agent.py</code>.</p>
+    </section>
+
+    <section>
+      <h2>Context is a budget</h2>
+      <ul>
+        <li>Every step re-sends the whole history: total input ≈ <code>N·S + (T+O)·N(N−1)/2</code>.</li>
+        <li>Send slices, not dumps: <code>kubectl logs --tail=200 --since=1h</code>, <code>grep</code> before <code>cat</code>.</li>
+        <li>Prompt caching bills the reused prefix at the cache-read price. Keep the prefix stable: no timestamps in the system prompt.</li>
+        <li>Off track? Start a fresh session with a better first message.</li>
+      </ul>
+      <h3>Ask like you'd ask a senior colleague</h3>
+      <p>What failed · where · the exact error · constraints · how to verify.</p>
+    </section>
+
+    <section class="wide">
+      <h2>AGENTS.md skeleton</h2>
+<pre>## Project
+Python service, Docker, Helm, namespace: course.
+
+## Commands
+- Test: ./scripts/test.sh
+- Deploy: helm upgrade --install course-app ./chart -n course
+
+## Rules
+- Run the tests before saying a task is done.
+- Never run kubectl delete, helm uninstall, docker system prune.
+- Images are non-root and pinned, never latest.</pre>
+    </section>
+
+    <section class="wide">
+      <h2>Guardrails in the harness</h2>
+      <p><code>.claude/settings.json</code> (Claude Code; other tools have the same idea)</p>
+<pre>{
+  "permissions": {
+    "allow": ["Bash(kubectl get:*)", "Bash(kubectl logs:*)"],
+    "deny": ["Bash(kubectl delete:*)", "Read(./.env)"]
+  },
+  "hooks": {
+    "PreToolUse": [{
+      "matcher": "Bash",
+      "hooks": [{
+        "type": "command",
+        "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.sh"
+      }]
+    }]
+  }
+}</pre>
+<pre>#!/usr/bin/env bash
+command=$(jq -r '.tool_input.command') || exit 2
+blocked='--context[= ]prod|terraform.* destroy|kubectl.* delete( |$)'
+if [[ "$command" =~ $blocked ]]; then
+  echo "Blocked by policy: this needs a human" >&2
+  exit 2
+fi</pre>
+      <p class="muted">Exit code 2 blocks the tool call and shows stderr to the model. <code>|| exit 2</code> fails closed if jq is missing. A regex is a speed bump; read-only credentials are the wall. Prompts are suggestions; hooks are rules.</p>
+    </section>
+
+    <section class="wide">
+      <h2>Read-only Kubernetes identity</h2>
+<pre>kubectl create serviceaccount ai-agent -n course
+kubectl create rolebinding ai-agent-view -n course \
+  --clusterrole=view --serviceaccount=course:ai-agent
+TOKEN=$(kubectl create token ai-agent -n course --duration=1h)
+kubectl config set-credentials ai-agent --token="$TOKEN"
+kubectl config set-context ai-agent \
+  --cluster="$CLUSTER" --user=ai-agent --namespace=course
+kubectl --context ai-agent auth can-i delete pods</pre>
+      <p class="muted">The built-in <code>view</code> role reads most resources, not Secrets. The last command answers <code>no</code>.</p>
+    </section>
+
+    <section>
+      <h2>MCP on the wire (2026-07-28)</h2>
+      <ul>
+        <li>JSON-RPC 2.0 over stdio (one JSON object per line) or Streamable HTTP (<code>MCP-Protocol-Version</code> header).</li>
+        <li>Stateless: every request carries <code>_meta</code> with <code>io.modelcontextprotocol/protocolVersion</code> and <code>clientCapabilities</code>. Older servers (2025-11-25 and before) use an <code>initialize</code> handshake.</li>
+        <li><code>server/discover</code> → <code>tools/list</code> → <code>tools/call</code>.</li>
+        <li>Tool failure: <code>"isError": true</code> in the result, so the model can retry. Bad request or unknown tool: JSON-RPC error <code>-32602</code>.</li>
+      </ul>
+    </section>
+
+    <section class="wide">
+      <h2>Evals as a CI gate (promptfoo)</h2>
+<pre>prompts:
+  - file://../prompts/explain.txt
+providers:
+  - id: anthropic:messages:claude-opus-5-5
+defaultTest:
+  options:
+    provider: anthropic:messages:claude-opus-5-5
+  assert:
+    - type: is-json
+      value: { type: object, required: [summary, severity] }
+    - type: llm-rubric
+      value: The fix is safe and never deletes data.
+tests: file://cases.yaml</pre>
+<pre>- name: Run evals
+  env:
+    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    PROMPTFOO_PASS_RATE_THRESHOLD: 90
+  run: npx promptfoo eval -c evals/promptfooconfig.yaml -o report.html</pre>
+      <p class="muted">Below the threshold promptfoo exits with code 100. Repeat flaky cases with <code>--repeat 3</code>. Current Claude models reject <code>temperature</code>: gate on a pass rate.</p>
+    </section>
+
+    <section>
+      <h2>Graders, cheapest first</h2>
+      <ol>
+        <li><strong>Deterministic</strong>: is-json, schema, icontains, regex, helm lint</li>
+        <li><strong>Semantic</strong>: similarity to a reference answer</li>
+        <li><strong>LLM as judge</strong>: a specific, pass/fail rubric</li>
+        <li><strong>Human</strong>: label a sample to check the judge</li>
+      </ol>
+      <p>Trust a judge only after measuring agreement with human labels: Cohen's κ = (pₒ − pₑ) / (1 − pₑ). Above 0.8 is almost perfect.</p>
+      <p>Structured outputs (<code>client.messages.parse(..., output_format=Model)</code>) guarantee the format; evals guard the content.</p>
+    </section>
+
+    <section>
+      <h2>Seven controls for AI jobs in CI</h2>
+      <ol>
+        <li>Pin third-party actions to a commit SHA</li>
+        <li>Least-privilege <code>permissions:</code>, starting from <code>contents: read</code></li>
+        <li>Secrets only on the step that needs them</li>
+        <li>Forks get no secrets: never run PR code with secrets via <code>pull_request_target</code></li>
+        <li>Event data through <code>env:</code>, never pasted into <code>run:</code></li>
+        <li>Bound the cost: <code>timeout-minutes</code>, <code>--max-turns</code>, a pass-rate gate</li>
+        <li>Treat AI output as untrusted: comment-only tokens, branch protection, a human merge</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Six rules for AI at work</h2>
+      <ol>
+        <li>A human approves anything that writes</li>
+        <li>Read-only and least privilege by default</li>
+        <li>No secrets, customer data or prod credentials in prompts</li>
+        <li>Verify with tools: lint, test, scan, plan, dry-run</li>
+        <li>Review AI output like a junior's PR</li>
+        <li>Follow your company's AI policy</li>
+      </ol>
+      <p><strong>Lethal trifecta</strong>: private data + untrusted content + a way to send data out. Remove one leg.</p>
+    </section>
+
+    <section>
+      <h2>OWASP Top 10 for LLM Applications 2025</h2>
+      <ul class="owasp">
+        <li><code>LLM01</code> Prompt Injection</li>
+        <li><code>LLM02</code> Sensitive Information Disclosure</li>
+        <li><code>LLM03</code> Supply Chain</li>
+        <li><code>LLM04</code> Data and Model Poisoning</li>
+        <li><code>LLM05</code> Improper Output Handling</li>
+        <li><code>LLM06</code> Excessive Agency</li>
+        <li><code>LLM07</code> System Prompt Leakage</li>
+        <li><code>LLM08</code> Vector and Embedding Weaknesses</li>
+        <li><code>LLM09</code> Misinformation</li>
+        <li><code>LLM10</code> Unbounded Consumption</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Try it at home</h2>
+      <ul>
+        <li><strong>Free</strong>: Ollama runs open models locally; promptfoo talks to it as <code>ollama:chat:qwen3</code>.</li>
+        <li><strong>Paid, cheap</strong>: one API key; a 10-case eval run costs well under a dollar.</li>
+        <li>GitHub Models was retired in July 2026: if a tutorial uses it, swap the provider.</li>
+      </ul>
+      <h3>Read more</h3>
+      <ul class="links">
+        <li>anthropic.com/engineering/building-effective-agents</li>
+        <li>modelcontextprotocol.io · agents.md</li>
+        <li>promptfoo.dev · github.com/confident-ai/deepeval</li>
+        <li>genai.owasp.org · simonwillison.net (the lethal trifecta)</li>
+        <li>platform.claude.com/docs · ollama.com · k8sgpt.ai</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

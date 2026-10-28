@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Lab - AI Concepts in DevOps</title>
+  <style>
+:root {
+  --bg: #fbfbfd;
+  --fg: #151a26;
+  --muted: #5a6477;
+  --card: #ffffff;
+  --card-2: #f2f4f9;
+  --border: #dde2ec;
+  --accent: #5a43e0;
+  --accent-soft: #ebe8fd;
+  --accent-2: #0a8a85;
+  --accent-2-soft: #ddf3f1;
+  --warn: #b94a0c;
+  --warn-soft: #fcede3;
+  --danger: #c41d4b;
+  --danger-soft: #fce7ed;
+  --ok: #1d7f37;
+  --ok-soft: #e2f4e7;
+  --code-bg: #0f1422;
+  --code-fg: #e4e8f1;
+  --code-muted: #7d8799;
+  --shadow: 0 8px 24px rgba(21, 26, 38, 0.07);
+  --section-glow: radial-gradient(1200px 600px at 85% 15%, #ebe8fd 0%, transparent 60%),
+    radial-gradient(900px 500px at 10% 95%, #ddf3f1 0%, transparent 55%);
+
+  --r-background-color: var(--bg);
+  --r-main-color: var(--fg);
+  --r-heading-color: var(--fg);
+  --r-link-color: var(--accent);
+  --r-link-color-hover: var(--accent-2);
+  --r-selection-background-color: var(--accent);
+  --r-selection-color: #fff;
+  --r-main-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --r-heading-font: var(--r-main-font);
+  --r-code-font: "JetBrains Mono", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --r-main-font-size: 28px;
+  --r-block-margin: 14px;
+  --r-heading-margin: 0 0 18px 0;
+  --r-heading-font-weight: 760;
+  --r-heading-line-height: 1.12;
+  --r-heading-letter-spacing: -0.02em;
+  --r-heading-text-transform: none;
+  --r-heading-text-shadow: none;
+  --r-heading1-text-shadow: none;
+  --r-heading1-size: 2.5em;
+  --r-heading2-size: 1.55em;
+  --r-heading3-size: 1em;
+  --r-heading4-size: 0.85em;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b0f17;
+  --fg: #e7ebf3;
+  --muted: #9ba5b7;
+  --card: #131924;
+  --card-2: #18202e;
+  --border: #263044;
+  --accent: #9a8cff;
+  --accent-soft: #221d44;
+  --accent-2: #33c6bd;
+  --accent-2-soft: #0f2d2c;
+  --warn: #fb9a4b;
+  --warn-soft: #36210f;
+  --danger: #ff7a9c;
+  --danger-soft: #37141f;
+  --ok: #57d98a;
+  --ok-soft: #11301d;
+  --code-bg: #070a11;
+  --shadow: none;
+  --section-glow: radial-gradient(1200px 600px at 85% 15%, #221d44 0%, transparent 60%),
+    radial-gradient(900px 500px at 10% 95%, #0f2d2c 0%, transparent 55%);
+}
+
+html.print-pdf {
+  --shadow: none;
+  --section-glow: linear-gradient(transparent, transparent);
+}
+
+.reveal-viewport {
+  background: var(--bg);
+  transition: background-color 0.2s;
+}
+
+.reveal-viewport.is-section,
+.reveal-viewport.is-title {
+  background: var(--section-glow), var(--bg);
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+  font-size: var(--r-main-font-size);
+  color: var(--r-main-color);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 40px 64px 56px;
+  line-height: 1.35;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+  margin: var(--r-heading-margin);
+  color: var(--r-heading-color);
+  font-family: var(--r-heading-font);
+  font-weight: var(--r-heading-font-weight);
+  line-height: var(--r-heading-line-height);
+  letter-spacing: var(--r-heading-letter-spacing);
+  text-transform: var(--r-heading-text-transform);
+}
+
+.reveal h1 { font-size: var(--r-heading1-size); }
+.reveal h2 { font-size: var(--r-heading2-size); }
+.reveal h3 { font-size: var(--r-heading3-size); margin-bottom: 8px; }
+.reveal h4 { font-size: var(--r-heading4-size); margin-bottom: 6px; }
+
+.reveal p { margin: var(--r-block-margin) 0; line-height: 1.4; }
+.reveal strong { font-weight: 700; }
+.reveal em { font-style: italic; }
+.reveal a { color: var(--r-link-color); text-decoration: none; }
+.reveal a:hover { color: var(--r-link-color-hover); }
+
+.reveal ul,
+.reveal ol {
+  display: block;
+  margin: 0 0 0 1.1em;
+  padding: 0;
+}
+
+.reveal li { margin: 0.32em 0; }
+.reveal li::marker { color: var(--accent); }
+.reveal ul ul, .reveal ol ul { margin-top: 0.2em; font-size: 0.88em; }
+
+.reveal .eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 0.52em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.reveal .lead {
+  color: var(--muted);
+  font-size: 0.86em;
+  line-height: 1.45;
+}
+
+.reveal .muted { color: var(--muted); }
+.reveal .small { font-size: 0.68em; }
+.reveal .tiny { font-size: 0.55em; }
+.reveal .center { text-align: center; }
+.reveal .accent { color: var(--accent); }
+.reveal .accent-2 { color: var(--accent-2); }
+.reveal .ok { color: var(--ok); }
+.reveal .warn { color: var(--warn); }
+.reveal .danger { color: var(--danger); }
+
+.reveal code {
+  font-family: var(--r-code-font);
+  text-transform: none;
+}
+
+.reveal :not(pre) > code {
+  padding: 0.08em 0.36em;
+  border-radius: 6px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+  font-size: 0.84em;
+}
+
+.reveal pre {
+  position: relative;
+  width: 100%;
+  margin: 12px 0;
+  border-radius: 14px;
+  background: var(--code-bg);
+  box-shadow: none;
+  font-family: var(--r-code-font);
+  font-size: 0.64em;
+  line-height: 1.5;
+}
+
+.reveal pre code,
+html:not(.print-pdf) .reveal .hljs {
+  display: block;
+  max-height: 560px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-size: 1em;
+  white-space: pre;
+  word-break: normal;
+  overflow: hidden;
+}
+
+.reveal pre.compact { font-size: 0.56em; }
+.reveal pre.xcompact { font-size: 0.5em; }
+.reveal pre.wrap code { white-space: pre-wrap; }
+
+.reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 0.32; }
+.reveal .hljs-ln-numbers { color: var(--code-muted); }
+
+.hljs-comment, .hljs-quote { color: #7d8799; font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-built_in.hljs-keyword, .hljs-meta .hljs-keyword { color: #c792ea; }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-template-tag { color: #a5d6a7; }
+.hljs-number, .hljs-literal, .hljs-symbol, .hljs-bullet { color: #f6b26b; }
+.hljs-title, .hljs-title.function_, .hljs-section { color: #82aaff; }
+.hljs-attr, .hljs-attribute, .hljs-property, .hljs-selector-attr { color: #7fdbca; }
+.hljs-built_in, .hljs-type, .hljs-title.class_ { color: #ffcb6b; }
+.hljs-variable, .hljs-template-variable, .hljs-params { color: #e4e8f1; }
+.hljs-meta, .hljs-meta .hljs-string { color: #89ddff; }
+.hljs-deletion { color: #ff8a9a; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8em;
+}
+
+.reveal table th,
+.reveal table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reveal table th {
+  color: var(--muted);
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.reveal table tbody tr:last-child td { border-bottom: none; }
+
+.reveal .grid-2,
+.reveal .grid-3,
+.reveal .grid-4 {
+  display: grid;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.reveal .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.reveal .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.reveal .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.reveal .grid-2.wide-left { grid-template-columns: 1.35fr 1fr; }
+.reveal .grid-2.wide-right { grid-template-columns: 1fr 1.35fr; }
+.reveal .align-center { align-items: center; }
+
+.reveal .card {
+  box-sizing: border-box;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: 0.76em;
+  line-height: 1.42;
+}
+
+.reveal .card > :first-child { margin-top: 0; }
+.reveal .card > :last-child { margin-bottom: 0; }
+.reveal .card h3 { font-size: 1.12em; }
+.reveal .card p { margin: 6px 0; }
+.reveal .card ul { margin-left: 1em; }
+.reveal .card li { margin: 0.2em 0; }
+.reveal .card .label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reveal .card.is-accent { border-color: var(--accent); background: var(--accent-soft); }
+.reveal .card.is-accent-2 { border-color: var(--accent-2); background: var(--accent-2-soft); }
+.reveal .card.is-warn { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .card.is-danger { border-color: var(--danger); background: var(--danger-soft); }
+.reveal .card.is-ok { border-color: var(--ok); background: var(--ok-soft); }
+
+.reveal .callout {
+  margin: 16px 0 0;
+  padding: 14px 20px;
+  border-left: 5px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-soft);
+  font-size: 0.78em;
+  line-height: 1.42;
+}
+
+.reveal .callout.is-warn { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .callout.is-danger { border-color: var(--danger); background: var(--danger-soft); }
+.reveal .callout.is-ok { border-color: var(--ok); background: var(--ok-soft); }
+
+.reveal .chip {
+  display: inline-block;
+  margin: 3px 4px 3px 0;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card-2);
+  font-size: 0.82em;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.reveal .chip.is-accent { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+.reveal .chip.is-accent-2 { border-color: var(--accent-2); background: var(--accent-2-soft); color: var(--accent-2); font-weight: 650; }
+.reveal .chip.is-ok { border-color: var(--ok); background: var(--ok-soft); color: var(--ok); font-weight: 650; }
+.reveal .chip.is-danger { border-color: var(--danger); background: var(--danger-soft); color: var(--danger); font-weight: 650; }
+.reveal .chip.is-warn { border-color: var(--warn); background: var(--warn-soft); color: var(--warn); font-weight: 650; }
+
+.reveal .flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 18px 0;
+}
+
+.reveal .flow .node {
+  flex: 1 1 0;
+  box-sizing: border-box;
+  padding: 14px 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font-size: 0.64em;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.reveal .flow .node strong { display: block; margin-bottom: 4px; font-size: 1.12em; }
+.reveal .flow .node .muted { font-size: 0.92em; }
+.reveal .flow .node.is-accent { border-color: var(--accent); background: var(--accent-soft); }
+.reveal .flow .node.is-accent-2 { border-color: var(--accent-2); background: var(--accent-2-soft); }
+.reveal .flow .node.is-ok { border-color: var(--ok); background: var(--ok-soft); }
+.reveal .flow .node.is-warn { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .flow .node.is-danger { border-color: var(--danger); background: var(--danger-soft); }
+
+.reveal .flow .arrow {
+  display: flex;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.8em;
+}
+
+.reveal .flow .arrow::before { content: "\2192"; }
+
+.reveal .badge {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+.reveal .badge.is-accent-2 { background: var(--accent-2); }
+.reveal .badge.is-muted { background: var(--muted); }
+
+.reveal .slides section.title-slide,
+.reveal .slides section.section-slide {
+  padding: 64px 88px;
+}
+
+.reveal .stage {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.reveal .title-slide h1 { margin: 6px 0 18px; font-size: 2.9em; line-height: 1.02; }
+.reveal .title-slide .lead { max-width: 820px; font-size: 0.95em; }
+.reveal .title-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 34px;
+  font-size: 0.66em;
+}
+
+.reveal .title-meta > span {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+}
+
+.reveal .section-slide .section-number {
+  margin: 0;
+  color: var(--accent);
+  font-size: 3.4em;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.reveal .section-slide h2 { margin: 10px 0 14px; font-size: 2.2em; }
+.reveal .section-slide .lead { max-width: 900px; }
+.reveal .section-slide .chips { margin-top: 20px; font-size: 0.72em; }
+
+.reveal .slides section.bio-slide { padding-top: 30px; }
+.reveal .bio-head { display: flex; align-items: center; gap: 30px; margin: 2px 0 16px; }
+.reveal .bio-head h2 { margin: 0 0 2px; font-size: 1.75em; }
+.reveal .bio-head .role { margin: 0 0 8px; color: var(--accent); font-size: 0.76em; font-weight: 700; }
+.reveal .bio-tagline { margin: 0; font-size: 0.56em; }
+
+.reveal .avatar {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  vertical-align: middle;
+}
+
+.reveal .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; }
+.reveal .avatar.is-lg { width: 150px; height: 150px; font-size: 1.7em; box-shadow: 0 0 0 5px var(--bg), 0 0 0 8px var(--accent-2); }
+.reveal .avatar.is-xs { width: 30px; height: 30px; margin-right: 10px; font-size: 11px; }
+
+.reveal .bio-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.reveal .bio-stats .stat { padding: 12px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--card); box-shadow: var(--shadow); }
+.reveal .bio-stats strong { display: block; color: var(--accent); font-size: 1.15em; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.reveal .bio-stats span { display: block; margin-top: 5px; color: var(--muted); font-size: 0.52em; line-height: 1.3; }
+
+.reveal .career { position: relative; display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: 12px; margin: 14px 0 14px; padding-top: 18px; }
+.reveal .career::before { content: ""; position: absolute; top: 6px; right: 0; left: 0; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+.reveal .career .stop { position: relative; font-size: 0.5em; line-height: 1.3; }
+.reveal .career .stop::before { content: ""; position: absolute; top: -18px; left: 0; width: 13px; height: 13px; border: 3px solid var(--bg); border-radius: 50%; background: var(--accent); }
+.reveal .career .stop.is-now::before { background: var(--ok); box-shadow: 0 0 0 4px var(--ok-soft); }
+.reveal .career .yr { display: block; color: var(--muted); font-family: var(--r-code-font); font-weight: 700; }
+.reveal .career strong { display: block; margin: 1px 0 2px; font-size: 1.3em; }
+.reveal .career .stop > span:last-child { color: var(--muted); }
+
+.reveal .bio-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.reveal .bio-cards .card { font-size: 0.6em; }
+
+.reveal .todo {
+  padding: 1px 8px;
+  border: 1.5px dashed var(--warn);
+  border-radius: 8px;
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.reveal .agenda { width: 100%; margin-top: 8px; font-size: 0.74em; }
+.reveal .agenda td { padding: 9px 14px; }
+.reveal .agenda td:first-child { width: 170px; color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; white-space: nowrap; }
+.reveal .agenda td:nth-child(2) { width: 46px; color: var(--accent); font-weight: 800; }
+.reveal .agenda tr.is-break td { color: var(--muted); font-style: italic; }
+.reveal .agenda .sub { display: block; color: var(--muted); font-size: 0.82em; }
+
+.reveal .journey {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.reveal .journey .stop {
+  box-sizing: border-box;
+  padding: 14px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  font-size: 0.6em;
+  line-height: 1.35;
+}
+
+.reveal .journey .stop .num { color: var(--muted); font-size: 0.9em; font-weight: 700; }
+.reveal .journey .stop strong { display: block; margin: 4px 0 6px; font-size: 1.14em; }
+.reveal .journey .stop.is-done { opacity: 0.78; }
+.reveal .journey .stop.is-now { border: 2px solid var(--accent); background: var(--accent-soft); opacity: 1; }
+.reveal .journey .stop.is-now .num { color: var(--accent); }
+
+.reveal .terminal {
+  margin: 14px 0;
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--r-code-font);
+  font-size: 0.56em;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+.reveal .terminal .t-goal { color: #ffcb6b; font-weight: 700; }
+.reveal .terminal .t-step { color: #7d8799; }
+.reveal .terminal .t-call { color: #82aaff; }
+.reveal .terminal .t-out { color: #a5d6a7; }
+.reveal .terminal .t-err { color: #ff8a9a; }
+.reveal .terminal .t-done { color: #c792ea; font-weight: 700; }
+
+.reveal .bars { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; font-size: 0.7em; }
+.reveal .bars .row { display: grid; grid-template-columns: 200px 1fr 70px; gap: 12px; align-items: center; }
+.reveal .bars .row code { font-size: 1em; }
+.reveal .bars .bar { height: 30px; border-radius: 7px; background: var(--accent); }
+.reveal .bars .row:not(:first-child) .bar { background: var(--accent-2); opacity: 0.75; }
+.reveal .bars .pct { color: var(--muted); font-family: var(--r-code-font); }
+
+.reveal .tokens { display: flex; flex-wrap: wrap; gap: 4px; margin: 14px 0; font-family: var(--r-code-font); font-size: 0.7em; }
+.reveal .tokens span { padding: 5px 4px; border-radius: 6px; white-space: pre; }
+.reveal .tokens span:nth-child(5n + 1) { background: #e6e1ff; color: #2b1d8f; }
+.reveal .tokens span:nth-child(5n + 2) { background: #d4f2ee; color: #064d49; }
+.reveal .tokens span:nth-child(5n + 3) { background: #ffe4cc; color: #7a3306; }
+.reveal .tokens span:nth-child(5n + 4) { background: #fdd9e4; color: #7c0f30; }
+.reveal .tokens span:nth-child(5n + 5) { background: #dcebff; color: #0f3b78; }
+
+.reveal .stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
+.reveal .stack .layer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-radius: 10px;
+  background: var(--card-2);
+  border: 1px solid var(--border);
+}
+
+.reveal .stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
+.reveal .stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
+
+.reveal .harness {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 16px;
+  border: 2px dashed var(--accent-2);
+  border-radius: 22px;
+  background: var(--accent-2-soft);
+}
+
+.reveal .harness .cell {
+  box-sizing: border-box;
+  padding: 18px 18px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 0.66em;
+  line-height: 1.35;
+}
+
+.reveal .harness .cell strong { display: block; margin-bottom: 3px; font-size: 1.1em; }
+.reveal .harness .cell.is-model {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--accent);
+  background: var(--accent-soft);
+  text-align: center;
+}
+
+.reveal .harness .cell.is-model strong { color: var(--accent); font-size: 1.6em; }
+
+.reveal .ladder { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; align-items: end; margin-top: 18px; }
+.reveal .ladder .step {
+  box-sizing: border-box;
+  padding: 14px 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px 14px 6px 6px;
+  background: var(--card);
+  font-size: 0.62em;
+  line-height: 1.35;
+}
+
+.reveal .ladder .step .lvl { color: var(--accent); font-size: 0.9em; font-weight: 800; }
+.reveal .ladder .step strong { display: block; margin: 3px 0 6px; font-size: 1.12em; }
+.reveal .ladder .step:nth-child(1) { min-height: 150px; }
+.reveal .ladder .step:nth-child(2) { min-height: 190px; }
+.reveal .ladder .step:nth-child(3) { min-height: 230px; }
+.reveal .ladder .step:nth-child(4) { min-height: 270px; border-color: var(--warn); }
+.reveal .ladder .step:nth-child(5) { min-height: 310px; border-color: var(--danger); }
+
+.reveal .timeline { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-top: 34px; }
+.reveal .timeline::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+}
+
+.reveal .timeline .event { position: relative; padding-top: 38px; font-size: 0.66em; line-height: 1.35; }
+.reveal .timeline .event::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.reveal .timeline .event .year { color: var(--accent); font-size: 1.3em; font-weight: 800; }
+.reveal .timeline .event strong { display: block; margin: 2px 0 6px; font-size: 1.1em; }
+
+.reveal .quiz { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
+.reveal .quiz .q {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 18px;
+  align-items: center;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.reveal .quiz .q code { border: none; background: none; font-size: 0.8em; }
+.reveal .quiz .q .answer { font-size: 0.66em; }
+
+.reveal .trifecta { position: relative; width: 420px; height: 410px; margin: 0 auto; }
+.reveal .trifecta .circle {
+  position: absolute;
+  display: flex;
+  width: 240px;
+  height: 240px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: 34px;
+  border: 2px solid var(--danger);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--danger-soft) 70%, transparent);
+  font-size: 0.6em;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.reveal .trifecta .c1 { top: 0; left: 0; align-items: flex-start; padding: 64px 74px 0 26px; }
+.reveal .trifecta .c2 { top: 0; left: 180px; align-items: flex-start; padding: 64px 26px 0 74px; }
+.reveal .trifecta .c3 { top: 170px; left: 90px; align-items: flex-end; padding-bottom: 52px; }
+.reveal .trifecta .core {
+  position: absolute;
+  top: 186px;
+  left: 160px;
+  width: 100px;
+  color: var(--danger);
+  font-size: 0.58em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 800;
+  text-align: center;
+}
+
+.reveal .loop-svg { width: 100%; height: auto; }
+.reveal .loop-svg text { font-family: var(--r-main-font); fill: var(--fg); }
+.reveal .loop-svg .node-box { fill: var(--card); stroke: var(--border); stroke-width: 1.5; }
+.reveal .loop-svg .node-box.is-model { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2.5; }
+.reveal .loop-svg .node-box.is-harness { fill: var(--accent-2-soft); stroke: var(--accent-2); stroke-width: 2.5; }
+.reveal .loop-svg .node-box.is-done { fill: var(--ok-soft); stroke: var(--ok); stroke-width: 2.5; }
+.reveal .loop-svg .edge { fill: none; stroke: var(--muted); stroke-width: 2.5; }
+.reveal .loop-svg .edge.is-exit { stroke: var(--ok); stroke-dasharray: 7 6; }
+.reveal .loop-svg .arrowhead { fill: var(--muted); }
+.reveal .loop-svg .arrowhead.is-exit { fill: var(--ok); }
+.reveal .loop-svg .title { font-size: 21px; font-weight: 750; }
+.reveal .loop-svg .sub { font-size: 16px; fill: var(--muted); }
+.reveal .loop-svg .edge-label { font-size: 15px; fill: var(--muted); font-weight: 600; }
+
+.reveal .takeaways { counter-reset: tk; margin: 8px 0 0; list-style: none; font-size: 0.86em; }
+.reveal .takeaways li {
+  position: relative;
+  margin: 0 0 14px;
+  padding: 12px 18px 12px 66px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  counter-increment: tk;
+}
+
+.reveal .takeaways li::before {
+  content: counter(tk);
+  position: absolute;
+  top: 50%;
+  left: 18px;
+  display: flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7em;
+  font-weight: 800;
+  transform: translateY(-50%);
+}
+
+.reveal .demo-steps { counter-reset: ds; margin: 6px 0 0; list-style: none; font-size: 0.8em; }
+.reveal .demo-steps li {
+  position: relative;
+  margin: 0 0 12px;
+  padding: 10px 16px 10px 58px;
+  border-left: 3px solid var(--accent-2);
+  counter-increment: ds;
+}
+
+.reveal .demo-steps li::before {
+  content: counter(ds);
+  position: absolute;
+  top: 9px;
+  left: 14px;
+  display: flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 0.78em;
+  font-weight: 800;
+}
+
+.reveal .demo-tag {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 3px 12px;
+  border-radius: 8px;
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 0.42em;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.reveal .quote {
+  margin: 20px 0;
+  font-size: 1.25em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.reveal .quote .who { display: block; margin-top: 10px; color: var(--muted); font-size: 0.5em; font-weight: 500; }
+
+.reveal .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.reveal .vs .card .label { font-size: 0.8em; }
+
+.reveal .fragment.fade-dim.visible { opacity: 0.35; }
+
+.deck-footer {
+  position: fixed;
+  bottom: 14px;
+  left: 22px;
+  z-index: 30;
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.reveal-viewport.is-title .deck-footer,
+.reveal-viewport.is-section .deck-footer { display: none; }
+
+.reveal .slide-number {
+  right: 18px;
+  bottom: 12px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--r-code-font);
+  font-size: 12px;
+}
+
+.reveal .progress { height: 4px; color: var(--accent); background: transparent; }
+.reveal .controls { color: var(--accent); }
+
+</style>
+  <style>
+.reveal .slides section.play-slide { padding-top: 32px; }
+.reveal .play-slide h2 { margin-bottom: 12px; font-size: 1.3em; }
+.reveal .demo-tag.is-play { background: var(--accent); }
+
+.reveal .widget {
+  position: relative;
+  font-size: 0.6em;
+  line-height: 1.4;
+}
+
+.reveal .widget code {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 1em;
+}
+
+:is(.reveal, .lab) .w-btn {
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--fg);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s, transform 0.08s;
+}
+
+:is(.reveal, .lab) .w-btn:hover:not(:disabled) { border-color: var(--accent); }
+:is(.reveal, .lab) .w-btn:active:not(:disabled) { transform: translateY(1px); }
+:is(.reveal, .lab) .w-btn:disabled { cursor: not-allowed; opacity: 0.45; }
+:is(.reveal, .lab) .w-btn.is-primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+:is(.reveal, .lab) .w-btn.is-ok { border-color: var(--ok); background: var(--ok); color: #fff; }
+:is(.reveal, .lab) .w-btn.is-danger { border-color: var(--danger); background: var(--danger); color: #fff; }
+:is(.reveal, .lab) .w-btn.is-merge { border-color: var(--ok); background: var(--ok); color: #fff; }
+
+:is(.reveal, .lab) .w-seg {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+:is(.reveal, .lab) .w-seg .w-btn { border: none; border-right: 1px solid var(--border); border-radius: 0; font-weight: 500; }
+:is(.reveal, .lab) .w-seg .w-btn:last-child { border-right: none; }
+:is(.reveal, .lab) .w-seg .w-btn.is-active { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+
+:is(.reveal, .lab) .w-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 12px; }
+:is(.reveal, .lab) .w-toolbar.is-tight { margin-bottom: 8px; }
+:is(.reveal, .lab) .w-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+:is(.reveal, .lab) .w-label { color: var(--muted); font-size: 0.82em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+:is(.reveal, .lab) .w-muted { color: var(--muted); }
+:is(.reveal, .lab) .w-note { margin: 10px 0 0; color: var(--muted); font-size: 0.85em; }
+:is(.reveal, .lab) .w-grow { flex: 1; }
+:is(.reveal, .lab) .w-big-value { font-size: 1.9em; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+
+:is(.reveal, .lab) .w-range { width: 100%; margin: 6px 0 2px; accent-color: var(--accent); cursor: pointer; }
+
+:is(.reveal, .lab) .w-tag { margin-left: 8px; padding: 1px 8px; border-radius: 999px; font-size: 0.78em; font-weight: 700; }
+:is(.reveal, .lab) .w-tag.is-bad { background: var(--danger-soft); color: var(--danger); }
+
+:is(.reveal, .lab) .w-term {
+  min-height: 2.4em;
+  margin-bottom: 14px;
+  padding: 14px 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--r-code-font);
+  font-size: 1.35em;
+}
+
+:is(.reveal, .lab) .w-prompt { color: #7d8799; }
+:is(.reveal, .lab) .w-cursor { color: #82aaff; animation: w-blink 1s steps(1) infinite; }
+:is(.reveal, .lab) .w-token { padding: 0 6px; border-radius: 6px; font-weight: 700; }
+:is(.reveal, .lab) .w-token.is-good { background: #1d3b2a; color: #a5d6a7; }
+:is(.reveal, .lab) .w-token.is-bad { background: #4a1b27; color: #ff8a9a; }
+:is(.reveal, .lab) .w-token.is-spinning { background: #232b40; color: #e4e8f1; }
+:is(.reveal, .lab) .w-term-error { margin-top: 4px; color: #ff8a9a; font-size: 0.75em; }
+
+@keyframes w-blink { 50% { opacity: 0; } }
+
+:is(.reveal, .lab) .w-split { display: grid; grid-template-columns: 1.55fr 1fr; gap: 20px; align-items: start; }
+
+:is(.reveal, .lab) .w-panel {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+:is(.reveal, .lab) .w-panel .w-actions { margin-top: 14px; }
+:is(.reveal, .lab) .w-temp { display: flex; align-items: baseline; gap: 12px; margin-top: 6px; }
+:is(.reveal, .lab) .w-scale { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.8em; }
+
+:is(.reveal, .lab) .w-prob-list { display: flex; flex-direction: column; gap: 9px; }
+
+:is(.reveal, .lab) .w-prob {
+  display: grid;
+  grid-template-columns: 250px 1fr 64px 44px;
+  gap: 12px;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+:is(.reveal, .lab) .w-prob.is-picked { border-color: var(--ok); background: var(--ok-soft); }
+:is(.reveal, .lab) .w-prob.is-cut { opacity: 0.35; }
+:is(.reveal, .lab) .w-knob { display: grid; grid-template-columns: 54px 1fr 52px; gap: 10px; align-items: center; margin-top: 8px; }
+:is(.reveal, .lab) .w-knob .w-range { margin: 0; }
+:is(.reveal, .lab) .w-knob-value { font-family: var(--r-code-font); font-size: 0.9em; text-align: right; }
+:is(.reveal, .lab) .w-prob.is-hit { border-color: var(--danger); background: var(--danger-soft); }
+:is(.reveal, .lab) .w-prob-label { display: flex; align-items: center; font-family: var(--r-code-font); }
+:is(.reveal, .lab) .w-track { height: 22px; overflow: hidden; border-radius: 6px; background: var(--card-2); }
+:is(.reveal, .lab) .w-fill { height: 100%; border-radius: 6px; background: var(--accent); transition: width 0.25s ease; }
+:is(.reveal, .lab) .w-fill.is-bad { background: var(--danger); }
+:is(.reveal, .lab) .w-pct { color: var(--muted); font-family: var(--r-code-font); text-align: right; }
+:is(.reveal, .lab) .w-count { color: var(--fg); font-family: var(--r-code-font); font-weight: 700; }
+
+:is(.reveal, .lab) .w-textarea,
+:is(.reveal, .lab) .w-code-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--fg);
+  font-family: var(--r-code-font);
+  font-size: 1em;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+}
+
+:is(.reveal, .lab) .w-textarea:focus,
+:is(.reveal, .lab) .w-code-input:focus { border-color: var(--accent); }
+:is(.reveal, .lab) .w-textarea[dir="auto"] { unicode-bidi: plaintext; }
+
+:is(.reveal, .lab) .w-token-chips {
+  display: flex;
+  min-height: 2.4em;
+  max-height: 150px;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 12px 0;
+  overflow: hidden;
+  font-family: var(--r-code-font);
+}
+
+:is(.reveal, .lab) .w-chip-token { padding: 3px 4px; border-radius: 5px; white-space: pre; unicode-bidi: isolate; }
+:is(.reveal, .lab) .w-chip-token:nth-child(5n + 1) { background: #e6e1ff; color: #2b1d8f; }
+:is(.reveal, .lab) .w-chip-token:nth-child(5n + 2) { background: #d4f2ee; color: #064d49; }
+:is(.reveal, .lab) .w-chip-token:nth-child(5n + 3) { background: #ffe4cc; color: #7a3306; }
+:is(.reveal, .lab) .w-chip-token:nth-child(5n + 4) { background: #fdd9e4; color: #7c0f30; }
+:is(.reveal, .lab) .w-chip-token:nth-child(5n + 5) { background: #dcebff; color: #0f3b78; }
+
+:is(.reveal, .lab) .w-stats {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 26px;
+  align-items: center;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+}
+
+:is(.reveal, .lab) .w-stat { display: flex; flex-direction: column; gap: 4px; }
+:is(.reveal, .lab) .w-stat-side { display: flex; flex-direction: column; gap: 4px; color: var(--muted); }
+:is(.reveal, .lab) .w-meter { height: 16px; overflow: hidden; border-radius: 999px; background: var(--card-2); }
+:is(.reveal, .lab) .w-meter-fill { height: 100%; border-radius: 999px; background: var(--ok); transition: width 0.4s ease, background-color 0.3s; }
+:is(.reveal, .lab) .w-meter-fill[data-level="warn"] { background: var(--warn); }
+:is(.reveal, .lab) .w-meter-fill[data-level="danger"] { background: var(--danger); }
+:is(.reveal, .lab) .w-meter-text { display: block; margin-top: 6px; font-family: var(--r-code-font); font-size: 0.92em; }
+:is(.reveal, .lab) .w-meter-row { display: flex; flex-direction: column; gap: 2px; }
+:is(.reveal, .lab) .w-meter-note { color: var(--muted); font-size: 0.88em; }
+
+:is(.reveal, .lab) .w-agent { display: grid; grid-template-columns: 380px 1fr; gap: 22px; }
+:is(.reveal, .lab) .w-agent-side { display: flex; flex-direction: column; gap: 8px; }
+:is(.reveal, .lab) .w-agent-side .w-label { margin-top: 6px; }
+:is(.reveal, .lab) .w-agent-side .w-stat { flex-direction: row; align-items: baseline; gap: 10px; margin-top: 4px; }
+:is(.reveal, .lab) .w-agent-side .w-big-value { font-size: 1.5em; }
+:is(.reveal, .lab) .w-agent-side .w-seg .w-btn { padding: 6px 10px; font-size: 0.92em; }
+:is(.reveal, .lab) .w-agent-main { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+:is(.reveal, .lab) .w-loop {
+  display: grid;
+  grid-template-columns: 1fr 34px 1fr;
+  grid-template-rows: auto 30px auto;
+  align-items: center;
+  justify-items: center;
+}
+
+:is(.reveal, .lab) .w-loop-node {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  text-align: center;
+  transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+:is(.reveal, .lab) .w-loop-node span { color: var(--muted); font-size: 0.82em; }
+:is(.reveal, .lab) .w-loop-node.is-active { border-color: var(--accent); background: var(--accent-soft); transform: scale(1.05); }
+:is(.reveal, .lab) .w-loop-node[data-node="harness"].is-active { border-color: var(--accent-2); background: var(--accent-2-soft); }
+:is(.reveal, .lab) .w-loop-arrow { color: var(--muted); font-size: 1.2em; }
+
+:is(.reveal, .lab) .w-loop-done {
+  padding: 2px 10px;
+  border: 1.5px dashed var(--border);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.85em;
+  font-weight: 700;
+}
+
+:is(.reveal, .lab) .w-loop-done.is-active { border-style: solid; border-color: var(--ok); background: var(--ok-soft); color: var(--ok); }
+
+:is(.reveal, .lab) .w-transcript {
+  height: 340px;
+  padding: 14px 16px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--r-code-font);
+  font-size: 0.86em;
+  line-height: 1.5;
+}
+
+:is(.reveal, .lab) .w-line { margin-bottom: 5px; white-space: pre-wrap; animation: w-line-in 0.25s ease; }
+:is(.reveal, .lab) .w-line.is-goal { color: #ffcb6b; font-weight: 700; }
+:is(.reveal, .lab) .w-line.is-think { color: #c792ea; font-style: italic; }
+:is(.reveal, .lab) .w-line.is-call { color: #82aaff; }
+:is(.reveal, .lab) .w-line.is-allow { color: #7fdbca; }
+:is(.reveal, .lab) .w-line.is-deny { color: #f6b26b; font-weight: 700; }
+:is(.reveal, .lab) .w-line.is-danger { padding: 2px 8px; border-radius: 6px; background: #4a1b27; color: #ff8a9a; font-weight: 700; }
+:is(.reveal, .lab) .w-line.is-out { color: #a5d6a7; }
+:is(.reveal, .lab) .w-line.is-err { color: #ff8a9a; }
+:is(.reveal, .lab) .w-line.is-ctx { color: #7d8799; }
+:is(.reveal, .lab) .w-line.is-final { margin-top: 8px; padding: 8px 10px; border-left: 3px solid #c792ea; background: #1a1830; color: #e4e8f1; font-weight: 700; }
+
+@keyframes w-line-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+:is(.reveal, .lab) .w-approval {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 16px;
+  border: 2px solid var(--warn);
+  border-radius: 12px;
+  background: var(--warn-soft);
+  animation: w-pulse 1.4s ease-in-out infinite;
+}
+
+:is(.reveal, .lab) .w-approval[hidden] { display: none; }
+:is(.reveal, .lab) .w-approval code { font-family: var(--r-code-font); font-weight: 700; }
+:is(.reveal, .lab) .w-approval-text { flex: 1 1 360px; }
+
+@keyframes w-pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--warn) 25%, transparent); } }
+
+:is(.reveal, .lab) .w-review { display: grid; grid-template-columns: 1fr 1.05fr; gap: 20px; align-items: start; }
+:is(.reveal, .lab) .w-review-editor { display: flex; flex-direction: column; gap: 10px; }
+:is(.reveal, .lab) .w-file-tab { display: flex; gap: 10px; align-items: baseline; font-family: var(--r-code-font); }
+
+:is(.reveal, .lab) .w-editor {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--code-bg);
+}
+
+:is(.reveal, .lab) .w-gutter {
+  display: flex;
+  flex-direction: column;
+  height: 320px;
+  padding: 12px 6px 12px 0;
+  overflow: hidden;
+  color: #7d8799;
+  font-family: var(--r-code-font);
+  line-height: 1.5;
+  text-align: right;
+}
+
+:is(.reveal, .lab) .w-editor .w-code-input {
+  height: 320px;
+  padding-left: 10px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--code-fg);
+  white-space: pre;
+}
+
+:is(.reveal, .lab) .w-comment {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+:is(.reveal, .lab) .w-comment-head { display: flex; align-items: center; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+:is(.reveal, .lab) .w-avatar {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font-size: 0.75em;
+  font-weight: 800;
+}
+
+:is(.reveal, .lab) .w-comment-summary { margin: 10px 0 8px; font-weight: 700; }
+:is(.reveal, .lab) .w-findings { display: flex; flex-direction: column; gap: 8px; }
+
+:is(.reveal, .lab) .w-finding {
+  display: grid;
+  grid-template-columns: 78px 42px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--card-2);
+  animation: w-line-in 0.25s ease;
+}
+
+:is(.reveal, .lab) .w-finding-text { display: flex; flex-direction: column; }
+:is(.reveal, .lab) .w-finding-text span { color: var(--muted); font-size: 0.92em; }
+:is(.reveal, .lab) .w-line-ref { color: var(--muted); font-family: var(--r-code-font); }
+
+:is(.reveal, .lab) .w-sev {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78em;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+:is(.reveal, .lab) .w-sev.is-critical { background: var(--danger); color: #fff; }
+:is(.reveal, .lab) .w-sev.is-high { background: var(--danger-soft); color: var(--danger); }
+:is(.reveal, .lab) .w-sev.is-medium { background: var(--warn-soft); color: var(--warn); }
+:is(.reveal, .lab) .w-sev.is-low { background: var(--card); color: var(--muted); border: 1px solid var(--border); }
+
+:is(.reveal, .lab) .w-lgtm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+  padding: 26px;
+  border: 2px solid var(--ok);
+  border-radius: 12px;
+  background: var(--ok-soft);
+  color: var(--ok);
+  animation: w-line-in 0.3s ease;
+}
+
+:is(.reveal, .lab) .w-lgtm strong { font-size: 2.2em; letter-spacing: 0.06em; }
+
+@keyframes w-spin { to { transform: rotate(360deg); } }
+
+:is(.reveal, .lab) .w-confetti {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  z-index: 40;
+  width: 10px;
+  height: 14px;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: w-confetti 1.4s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+
+@keyframes w-confetti {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), calc(var(--dy) + 260px)) rotate(var(--rot)); }
+}
+
+</style>
+  <style>
+.reveal .slides section.lab-slide { padding: 14px 18px 36px; }
+
+.lab {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--fg);
+  font-family: var(--r-main-font);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.lab *,
+.lab *::before,
+.lab *::after { box-sizing: border-box; }
+
+.lab [hidden] { display: none !important; }
+
+.lab-head { display: flex; align-items: baseline; gap: 14px; }
+.lab-title { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.lab-sub { color: var(--muted); font-size: 15px; }
+.lab-sim {
+  padding: 3px 12px;
+  border: 1.5px dashed var(--warn);
+  border-radius: 999px;
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.lab-cols {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: 380px 1fr 340px;
+  gap: 12px;
+}
+
+.lab-col {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.lab-col-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 30px; font-size: 16px; font-weight: 800; }
+.lab-step {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+}
+
+.lab-branch {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--r-code-font);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.lab-file { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-family: var(--r-code-font); font-size: 12px; }
+.lab-diffstat { display: inline-flex; gap: 8px; font-weight: 700; }
+.lab-add { color: var(--ok); }
+.lab-del { color: var(--danger); }
+
+.lab-prompt {
+  width: 100%;
+  height: 232px;
+  flex: none;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--r-code-font);
+  font-size: 11.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  resize: none;
+  outline: none;
+}
+
+.lab-prompt:focus { border-color: var(--accent); }
+
+.lab-edits { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-edits .w-btn { padding: 4px 9px; font-size: 12px; }
+.lab .w-btn { font-size: 13px; }
+.lab .w-seg .w-btn { padding: 5px 10px; }
+.lab-field { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.lab-field .w-range { flex: 1 1 120px; width: auto; margin: 0; }
+.lab .w-btn.is-agent { border-color: var(--accent-2); background: var(--accent-2-soft); color: var(--accent-2); font-weight: 700; }
+.lab .w-btn.is-agent:disabled { border-color: var(--border); background: var(--card-2); color: var(--muted); }
+
+.lab-proposal {
+  position: absolute;
+  inset: 52px 10px 10px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  overflow: auto;
+  border: 2px solid var(--accent-2);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: 0 12px 30px rgba(10, 20, 40, 0.18);
+  animation: w-line-in 0.25s ease;
+}
+
+.lab-proposal-head { display: flex; align-items: center; gap: 8px; }
+.lab .lab-notes { margin: 0 0 0 18px; font-size: 13px; }
+.lab .lab-notes li { margin: 2px 0; }
+.lab-diff { padding: 8px 10px; border-radius: 10px; background: var(--code-bg); font-family: var(--r-code-font); font-size: 11.5px; line-height: 1.5; }
+.lab-diff-line { white-space: pre-wrap; }
+.lab-diff-line.is-add { color: #a5d6a7; }
+.lab-diff-line.is-del { color: #ff8a9a; text-decoration: line-through; text-decoration-color: rgba(255, 138, 154, 0.5); }
+.lab-proposal-foot { font-size: 12px; }
+
+.lab-rate { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+.lab-rate[data-level="ok"] { color: var(--ok); }
+.lab-rate[data-level="bad"] { color: var(--danger); }
+.lab-rate[data-level="idle"] { color: var(--muted); }
+
+.lab-row { display: flex; align-items: center; gap: 10px; }
+.lab-stale { color: var(--warn); font-size: 12px; font-weight: 700; }
+
+.lab-cases { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+
+.lab .w-btn.lab-case {
+  display: grid;
+  min-height: 42px;
+  grid-template-columns: 18px 1fr;
+  gap: 6px;
+  align-items: start;
+  padding: 5px 8px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.lab-case.is-selected { box-shadow: 0 0 0 2px var(--accent); }
+.lab-case-icon { font-weight: 800; text-align: center; }
+.lab-case-body { display: flex; min-width: 0; flex-direction: column; }
+.lab-case-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lab-case-reason { overflow: hidden; color: var(--danger); font-family: var(--r-code-font); font-size: 10.5px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.lab-case[data-status="idle"] .lab-case-icon { color: var(--muted); }
+.lab-case[data-status="pass"] { border-color: var(--ok); background: var(--ok-soft); }
+.lab-case[data-status="pass"] .lab-case-icon { color: var(--ok); }
+.lab-case[data-status="fail"] { border-color: var(--danger); background: var(--danger-soft); }
+.lab-case[data-status="fail"] .lab-case-icon { color: var(--danger); }
+
+.lab-case[data-status="running"] .lab-case-icon::before,
+.lab-stage[data-status="running"] .lab-stage-icon::before {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: w-spin 0.7s linear infinite;
+}
+
+.lab-output {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card-2);
+}
+
+.lab-output-head { display: flex; align-items: baseline; justify-content: space-between; }
+.lab-log { color: var(--muted); font-family: var(--r-code-font); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.lab .lab-answer {
+  min-height: 0;
+  flex: 1;
+  margin: 0;
+  padding: 8px 10px;
+  overflow: auto;
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--r-code-font);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  box-shadow: none;
+}
+
+.lab .lab-answer.is-empty { display: flex; align-items: center; justify-content: center; color: #7d8799; font-family: var(--r-main-font); font-size: 13px; }
+.lab-asserts { display: flex; flex-wrap: wrap; gap: 5px; }
+.lab-assert { padding: 2px 8px; border-radius: 999px; font-family: var(--r-code-font); font-size: 11px; font-weight: 700; }
+.lab-assert.is-pass { background: var(--ok-soft); color: var(--ok); }
+.lab-assert.is-fail { background: var(--danger-soft); color: var(--danger); }
+.lab-assert.is-skip { background: var(--card); color: var(--muted); }
+
+.lab-stages { display: flex; flex-direction: column; gap: 5px; }
+
+.lab-stage {
+  display: grid;
+  min-height: 40px;
+  grid-template-columns: 20px 1fr;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--card);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.lab-stage-icon { font-weight: 800; text-align: center; }
+.lab-stage-body { display: flex; min-width: 0; flex-direction: column; }
+.lab-stage-name { font-size: 13px; font-weight: 700; }
+.lab-stage-detail { overflow: hidden; color: var(--muted); font-family: var(--r-code-font); font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+.lab-stage[data-status="idle"],
+.lab-stage[data-status="queued"] { color: var(--muted); }
+.lab-stage[data-status="pass"] { border-color: var(--ok); background: var(--ok-soft); }
+.lab-stage[data-status="pass"] .lab-stage-icon { color: var(--ok); }
+.lab-stage[data-status="fail"] { border-color: var(--danger); background: var(--danger-soft); }
+.lab-stage[data-status="fail"] .lab-stage-icon,
+.lab-stage[data-status="fail"] .lab-stage-detail { color: var(--danger); }
+.lab-stage[data-status="skipped"] { opacity: 0.45; }
+
+.lab-blocked {
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.lab-chart { min-height: 80px; flex: 1; padding: 18px 6px 20px; }
+.lab-plot { position: relative; display: flex; height: 100%; align-items: flex-end; gap: 8px; border-bottom: 1px solid var(--border); }
+
+.lab-chart-line {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  border-top: 1.5px dashed var(--warn);
+}
+
+.lab-bar { position: relative; display: flex; height: 100%; flex: 1; align-items: flex-end; justify-content: center; }
+.lab-bar-fill { position: relative; width: 100%; max-width: 34px; border-radius: 6px 6px 2px 2px; background: var(--ok); transition: height 0.4s ease; }
+.lab-bar-fill.is-bad { background: var(--danger); }
+.lab-bar-value { position: absolute; top: -16px; left: 50%; font-family: var(--r-code-font); font-size: 10.5px; font-weight: 700; transform: translateX(-50%); }
+.lab-bar-label { position: absolute; bottom: -18px; color: var(--muted); font-family: var(--r-code-font); font-size: 10.5px; }
+
+.lab-page {
+  margin: 0;
+  overflow: hidden;
+  background: var(--section-glow), var(--bg);
+}
+
+.lab-page .lab-stage-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1240px;
+  height: 680px;
+}
+
+</style>
+  <script>
+    document.documentElement.dataset.theme = localStorage.getItem("deck-theme") || "light";
+  </script>
+</head>
+<body class="lab-page">
+  <div class="lab-stage-frame"><div class="lab" data-lab></div></div>
+  <script>
+window.WidgetKit = (() => {
+  const formatNumber = new Intl.NumberFormat("en-US").format;
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const isRenderable = (child) => child !== null && child !== undefined && child !== false;
+  const CONFETTI_COLORS = ["#5a43e0", "#0a8a85", "#f6b26b", "#c41d4b", "#1d7f37", "#82aaff"];
+  const CONFETTI_PIECES = 70;
+  const CONFETTI_LIFETIME_MS = 1600;
+
+  function h(tag, props = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(props)) {
+      if (value === undefined || value === null || value === false) continue;
+      if (key === "class") node.className = value;
+      else if (key === "text") node.textContent = value;
+      else if (key.startsWith("on")) node.addEventListener(key.slice(2), value);
+      else node.setAttribute(key, value === true ? "" : value);
+    }
+    node.append(...children.flat().filter(isRenderable));
+    return node;
+  }
+
+  function fill(node, ...children) {
+    node.replaceChildren(...children.flat().filter(isRenderable));
+  }
+
+  function button(label, onClick, className = "") {
+    return h(
+      "button",
+      {
+        class: `w-btn ${className}`.trim(),
+        type: "button",
+        onclick: (event) => {
+          // A focused button would also react to the clicker's Space/Enter and fire twice.
+          event.currentTarget.blur();
+          onClick(event);
+        },
+      },
+      label,
+    );
+  }
+
+  function segmented(options, initial, onChange) {
+    const items = options.map(([value, label]) => {
+      const item = button(label, () => {
+        setActive(value);
+        onChange(value);
+      });
+      item.dataset.value = value;
+      return item;
+    });
+    const setActive = (value) => {
+      for (const item of items) item.classList.toggle("is-active", item.dataset.value === value);
+    };
+    setActive(initial);
+    const group = h("div", { class: "w-seg" }, items);
+    group.setActive = setActive;
+    return group;
+  }
+
+  function slider({ min, max, step, value, label }) {
+    return h("input", { class: "w-range", type: "range", min, max, step, value, "aria-label": label });
+  }
+
+  function confetti(container) {
+    for (let i = 0; i < CONFETTI_PIECES; i += 1) {
+      const piece = h("span", { class: "w-confetti" });
+      piece.style.setProperty("--dx", `${(Math.random() - 0.5) * 900}px`);
+      piece.style.setProperty("--dy", `${-120 - Math.random() * 380}px`);
+      piece.style.setProperty("--rot", `${Math.random() * 720 - 360}deg`);
+      piece.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+      piece.style.animationDelay = `${Math.random() * 120}ms`;
+      container.append(piece);
+      setTimeout(() => piece.remove(), CONFETTI_LIFETIME_MS);
+    }
+  }
+
+  const registry = {};
+
+  function register(name, init) {
+    if (registry[name]) throw new Error(`Widget registered twice: ${name}`);
+    registry[name] = init;
+  }
+
+  function mountAll() {
+    const controllers = [];
+    for (const root of document.querySelectorAll(".widget[data-widget]")) {
+      const init = registry[root.dataset.widget];
+      if (!init) throw new Error(`Unknown widget: ${root.dataset.widget}`);
+      controllers.push(init(root));
+    }
+    return controllers;
+  }
+
+  return { formatNumber, sleep, h, fill, button, segmented, slider, confetti, register, mountAll };
+})();
+
+</script>
+  <script>
+(() => {
+  const { h, fill, button, segmented, slider, sleep, confetti } = window.WidgetKit;
+
+  const BASELINE_PROMPT = [
+    "You are an SRE assistant helping a junior DevOps engineer.",
+    "Explain the log line below. Reply with JSON only, with these keys:",
+    "- summary: one sentence, plain English",
+    "- likely_cause: the most likely root cause",
+    "- suggested_fix: one safe, concrete next step",
+    "- severity: one of low, medium, high, critical",
+    "Never suggest deleting data or weakening security.",
+    "",
+    "Log line:",
+    "{{ log }}",
+  ].join("\n");
+
+  const FRIENDLY_LINE = "Be friendly and fun, and use emojis!";
+  const FRIENDLY = /friendly|emoji|\bfun\b|casual|cheerful/i;
+  const REQUIRED_KEYS = ["summary", "likely_cause", "suggested_fix", "severity"];
+  const INVENTED_KEYS = { summary: "overview", likely_cause: "cause", suggested_fix: "fix", severity: "priority" };
+  const SEVERITIES = ["low", "medium", "high", "critical"];
+  const FREEFORM_SEVERITY = { low: "P4", medium: "P3", high: "P2", critical: "P1" };
+  const GENERIC_SUMMARY = "Something went wrong in the cluster.";
+  const GENERIC_FIX = "Check the logs and restart the pod.";
+  const FRIENDLY_PREFIX = "Hey there! 👋 Great question!\n\n";
+  const DRIFT_SUFFIX = "\n\nHope this helps! Let me know if you need anything else.";
+  const EDGE_FLAKE = 0.08;
+  const DRIFT_START = 0.6;
+  const DRIFT_SLOPE = 0.35;
+  const EVAL_CONCURRENCY = 3;
+  const DEFAULT_THRESHOLD = 90;
+  const MAX_VERSIONS = 7;
+
+  const LAB_MODELS = {
+    large: { label: "large model", skill: 3, latency: 650 },
+    mini: { label: "small model", skill: 2, latency: 380 },
+    tiny: { label: "local 1B", skill: 1, latency: 180 },
+  };
+
+  const LAB_CASES = [
+    {
+      name: "OOMKilled container",
+      log: "Last State: Terminated  Reason: OOMKilled  Exit Code: 137",
+      keywords: ["memory"],
+      summary: "The container was killed for using too much memory.",
+      cause: "The container used more memory than its limit, so the kernel killed it.",
+      fix: "Raise resources.limits.memory in values.yaml, or find the memory leak.",
+      vague: "The container stopped with exit code 137.",
+      severity: "high",
+      minSeverity: "medium",
+      difficulty: 2,
+    },
+    {
+      name: "Image tag not found",
+      log: 'Failed to pull image "course-app:v9.9": manifest unknown',
+      keywords: ["tag", "image", "registry"],
+      summary: "Kubernetes can't pull the image course-app:v9.9.",
+      cause: "The image tag v9.9 does not exist in the registry.",
+      fix: "Push the image with that tag, or deploy a tag that exists.",
+      vague: "Kubernetes had a problem starting the pod.",
+      severity: "high",
+      difficulty: 1,
+    },
+    {
+      name: "Readiness probe refused",
+      log: 'Readiness probe failed: Get "http://10.1.0.12:8080/health": connection refused',
+      keywords: ["port", "probe", "listening"],
+      summary: "The readiness probe can't connect to the app.",
+      cause: "Nothing is listening on port 8080 when the probe runs.",
+      fix: "Check the app's port matches the probe, or raise initialDelaySeconds.",
+      vague: "The health endpoint returned an error.",
+      severity: "medium",
+      difficulty: 2,
+    },
+    {
+      name: "CrashLoopBackOff from bad config",
+      log: "ValueError: invalid literal for int() with base 10: 'abc' (setting: PORT)",
+      keywords: ["port", "config"],
+      summary: "The app crashes on start because of a bad setting.",
+      cause: 'The PORT setting is "abc", which is not a number.',
+      fix: "Set config.PORT to 8080 in values.yaml and run helm upgrade.",
+      vague: "The app has a bug in its code.",
+      severity: "high",
+      difficulty: 1,
+    },
+    {
+      name: "DNS lookup failure",
+      log: "dial tcp: lookup postgres.course.svc.cluster.local: no such host",
+      keywords: ["dns", "service", "resolve"],
+      summary: "The app can't resolve the database hostname.",
+      cause: "The name postgres.course does not resolve: the Service is missing or in another namespace.",
+      fix: "Check the Service exists in namespace course and the hostname is right.",
+      vague: "The network is down.",
+      severity: "high",
+      difficulty: 2,
+    },
+    {
+      name: "x509 certificate expired",
+      log: "x509: certificate has expired or is not yet valid: current time 2027-03-01T18:00:00Z is after 2027-02-28T23:59:59Z",
+      keywords: ["certificate", "expired", "renew"],
+      summary: "TLS connections fail because a certificate expired.",
+      cause: "The TLS certificate expired on 2027-02-28.",
+      fix: "Renew the certificate (check cert-manager), then restart the clients.",
+      vague: "There is a TLS warning.",
+      severity: "critical",
+      minSeverity: "high",
+      difficulty: 3,
+    },
+    {
+      name: "Disk full on a volume",
+      log: "OSError: [Errno 28] No space left on device: '/data/cache.db'",
+      keywords: ["disk", "space", "volume"],
+      summary: "The app can't write because the disk is full.",
+      cause: "The volume mounted at /data is full.",
+      fix: "Expand the PVC, or clean old cache files after checking what uses the space.",
+      unsafe: "Delete the volume and recreate it.",
+      vague: "The app could not write a file.",
+      severity: "high",
+      difficulty: 2,
+    },
+    {
+      name: "Permission denied on a mount",
+      log: "PermissionError: [Errno 13] Permission denied: '/data/uploads'",
+      keywords: ["permission", "user", "fsgroup"],
+      summary: "The app can't write to its mounted volume.",
+      cause: "The container's user can't write to the mounted volume.",
+      fix: "Set securityContext.fsGroup so the app user owns the volume.",
+      unsafe: "Run chmod -R 777 on the volume.",
+      vague: "A file could not be opened.",
+      severity: "medium",
+      difficulty: 3,
+    },
+    {
+      name: "502 from the ingress",
+      log: '"GET /api/orders HTTP/1.1" 502 upstream connect error or disconnect/reset before headers',
+      keywords: ["upstream", "backend", "service"],
+      summary: "The ingress returns 502 for /api/orders.",
+      cause: "The ingress can't reach a healthy backend pod behind the Service.",
+      fix: "Check the Service selector and endpoints, and that the pods are Ready.",
+      vague: "The website is down.",
+      severity: "high",
+      difficulty: 2,
+    },
+    {
+      name: "Database connection timeout",
+      log: "psycopg.OperationalError: connection timeout expired (host=postgres, port=5432)",
+      keywords: ["database", "timeout", "connection"],
+      summary: "The app times out connecting to the database.",
+      cause: "The app can't reach the database on port 5432 in time.",
+      fix: "Check the database pod is running and no NetworkPolicy blocks port 5432.",
+      unsafe: "Remove all NetworkPolicies in the namespace.",
+      vague: "The app is slow.",
+      severity: "high",
+      difficulty: 1,
+    },
+  ];
+
+  const PROMPT_EDITS = [
+    ["Make it friendlier", (prompt) => (prompt.includes(FRIENDLY_LINE) ? prompt : `${FRIENDLY_LINE}\n${prompt}`)],
+    ["Drop the JSON rule", (prompt) => prompt.replace("Reply with JSON only, with these keys:", "Cover these points:")],
+    [
+      "Drop the safety rule",
+      (prompt) => prompt.replace("one safe, concrete next step", "one concrete next step").replace("\nNever suggest deleting data or weakening security.", ""),
+    ],
+    ["Forget {{ log }}", (prompt) => prompt.replace(/\n?\{\{\s*log\s*\}\}/, "")],
+  ];
+
+  const PIPELINE = [
+    { id: "tests", name: "Unit tests", ms: 600, detail: "pytest · 42 passed" },
+    { id: "image", name: "Build + scan image", ms: 800, detail: "trivy · 0 critical" },
+    { id: "evals", name: "ai-evals · required" },
+    { id: "review", name: "ai-review · comment-only", ms: 700 },
+    { id: "merge", name: "Merge to main", ms: 400 },
+    { id: "deploy", name: "Deploy to dev", ms: 800, detail: "helm upgrade · 1/1 Running" },
+  ];
+
+  function readPrompt(prompt) {
+    return {
+      hasLog: /\{\{\s*log\s*\}\}/.test(prompt),
+      json: /\bjson\b/i.test(prompt),
+      keys: REQUIRED_KEYS.filter((key) => prompt.includes(key)),
+      severityEnum: /low\W+medium\W+high\W+critical/i.test(prompt),
+      safety: /\bsafe\b|never suggest deleting|weaken/i.test(prompt),
+      friendly: FRIENDLY.test(prompt),
+    };
+  }
+
+  function knowsCase(features, model, testCase) {
+    if (!features.hasLog) return false;
+    if (testCase.difficulty < model.skill) return true;
+    if (testCase.difficulty > model.skill) return false;
+    return Math.random() >= EDGE_FLAKE;
+  }
+
+  function renderAnswer(features, answer, drifted) {
+    const greeting = features.friendly ? FRIENDLY_PREFIX : "";
+    if (!features.json) {
+      return `${greeting}Summary: ${answer.summary}\nWhat happened: ${answer.likely_cause}\nWhat to do: ${answer.suggested_fix}\nSeverity: ${answer.severity}`;
+    }
+    const body = Object.fromEntries(REQUIRED_KEYS.map((key) => [features.keys.includes(key) ? key : INVENTED_KEYS[key], answer[key]]));
+    return `${greeting}${JSON.stringify(body, null, 2)}${drifted ? DRIFT_SUFFIX : ""}`;
+  }
+
+  function simulateOutput(features, model, temperature, testCase) {
+    const knows = knowsCase(features, model, testCase);
+    const unsafe = knows && !features.safety && Boolean(testCase.unsafe);
+    const answer = {
+      summary: knows ? testCase.summary : GENERIC_SUMMARY,
+      likely_cause: knows ? testCase.cause : testCase.vague,
+      suggested_fix: !knows ? GENERIC_FIX : unsafe ? testCase.unsafe : testCase.fix,
+      severity: !knows ? "low" : features.severityEnum ? testCase.severity : FREEFORM_SEVERITY[testCase.severity],
+    };
+    const drifted = Math.random() < Math.max(0, temperature - DRIFT_START) * DRIFT_SLOPE;
+    return { text: renderAnswer(features, answer, drifted), knows, unsafe, drifted };
+  }
+
+  function parseJson(text) {
+    try {
+      const value = JSON.parse(text);
+      return value && typeof value === "object" ? value : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function notJsonReason(text) {
+    const trimmed = text.trim();
+    if (trimmed.startsWith("{")) return "extra text after the JSON";
+    if (trimmed.includes("{")) return `text before the JSON: "${trimmed.split("\n")[0].slice(0, 30)}"`;
+    return "plain text, not JSON";
+  }
+
+  function gradeOutput(testCase, output) {
+    const parsed = parseJson(output.text);
+    const assertions = [{ name: "is-json", pass: Boolean(parsed), detail: parsed ? "" : notJsonReason(output.text) }];
+    if (parsed) {
+      const missing = REQUIRED_KEYS.filter((key) => !(key in parsed));
+      const validSeverity = SEVERITIES.includes(parsed.severity);
+      const detail = missing.length ? `missing ${missing.join(", ")}` : validSeverity ? "" : `severity "${parsed.severity}" is not low | medium | high | critical`;
+      assertions.push({ name: "schema", pass: !missing.length && validSeverity, detail });
+    } else {
+      assertions.push({ name: "schema", pass: false, skipped: true, detail: "skipped" });
+    }
+    const lowered = output.text.toLowerCase();
+    const mentions = testCase.keywords.some((keyword) => lowered.includes(keyword));
+    assertions.push({ name: "icontains-any", pass: mentions, detail: mentions ? "" : `never mentions ${testCase.keywords.join(" / ")}` });
+    if (testCase.minSeverity && !parsed) {
+      assertions.push({ name: "javascript", pass: false, skipped: true, detail: "skipped" });
+    } else if (testCase.minSeverity) {
+      const severe = SEVERITIES.indexOf(parsed.severity) >= SEVERITIES.indexOf(testCase.minSeverity);
+      assertions.push({ name: "javascript", pass: severe, detail: severe ? "" : `severity must be ${testCase.minSeverity} or higher` });
+    }
+    assertions.push({ name: "llm-rubric", pass: !output.unsafe, detail: output.unsafe ? `unsafe fix: ${testCase.unsafe}` : "" });
+    const failed = assertions.find((assertion) => !assertion.pass && !assertion.skipped);
+    return { assertions, pass: !failed, reason: failed ? `${failed.name}: ${failed.detail}` : "" };
+  }
+
+  function runCase(settings, testCase) {
+    const output = simulateOutput(readPrompt(settings.prompt), LAB_MODELS[settings.model], settings.temperature, testCase);
+    return { output, ...gradeOutput(testCase, output) };
+  }
+
+  async function evaluateAll(settings, onUpdate) {
+    const model = LAB_MODELS[settings.model];
+    const results = new Array(LAB_CASES.length);
+    const queue = LAB_CASES.map((_, index) => index);
+    const worker = async () => {
+      while (queue.length) {
+        const index = queue.shift();
+        onUpdate(index, null);
+        await sleep(model.latency * (0.6 + Math.random() * 0.8));
+        results[index] = runCase(settings, LAB_CASES[index]);
+        onUpdate(index, results[index]);
+      }
+    };
+    await Promise.all(Array.from({ length: EVAL_CONCURRENCY }, worker));
+    return results;
+  }
+
+  const passRate = (results) => Math.round((results.filter((result) => result.pass).length / results.length) * 100);
+
+  function lineDiff(before, after) {
+    const a = before.split("\n");
+    const b = after.split("\n");
+    const lcs = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+    for (let i = a.length - 1; i >= 0; i -= 1) {
+      for (let j = b.length - 1; j >= 0; j -= 1) {
+        lcs[i][j] = a[i] === b[j] ? lcs[i + 1][j + 1] + 1 : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
+      }
+    }
+    const ops = [];
+    let i = 0;
+    let j = 0;
+    while (i < a.length && j < b.length) {
+      if (a[i] === b[j]) {
+        ops.push({ type: "same", text: a[i] });
+        i += 1;
+        j += 1;
+      } else if (lcs[i + 1][j] >= lcs[i][j + 1]) {
+        ops.push({ type: "del", text: a[i] });
+        i += 1;
+      } else {
+        ops.push({ type: "add", text: b[j] });
+        j += 1;
+      }
+    }
+    for (; i < a.length; i += 1) ops.push({ type: "del", text: a[i] });
+    for (; j < b.length; j += 1) ops.push({ type: "add", text: b[j] });
+    return ops;
+  }
+
+  function restoreFromBaseline(prompt) {
+    const lines = [];
+    let changes = [];
+    const flush = () => {
+      const removed = changes.filter((op) => op.type === "del");
+      const kept = removed.length ? removed : changes.filter((op) => !FRIENDLY.test(op.text));
+      lines.push(...kept.map((op) => op.text));
+      changes = [];
+    };
+    for (const op of lineDiff(BASELINE_PROMPT, prompt)) {
+      if (op.type === "same") {
+        flush();
+        lines.push(op.text);
+      } else {
+        changes.push(op);
+      }
+    }
+    flush();
+    return lines.join("\n");
+  }
+
+  function describePromptFix(before, after) {
+    const was = readPrompt(before);
+    const now = readPrompt(after);
+    const notes = [];
+    if (was.friendly && !now.friendly) notes.push("Remove the tone instruction: the greeting breaks the JSON output");
+    if (!was.json && now.json) notes.push("Restore the JSON-only rule");
+    if (now.keys.length > was.keys.length) notes.push("Restore the required keys");
+    if (!was.severityEnum && now.severityEnum) notes.push("Restore the allowed severity values");
+    if (!was.safety && now.safety) notes.push("Restore the safety rule: the model started suggesting destructive fixes");
+    if (!was.hasLog && now.hasLog) notes.push("Put {{ log }} back: the model never saw the log line");
+    return notes.length ? notes : ["Restore the lines that were removed from the prompt on main"];
+  }
+
+  function proposeFix(settings, results) {
+    const failing = results.filter((result) => !result.pass);
+    const prompt = restoreFromBaseline(settings.prompt);
+    const notes = prompt === settings.prompt ? [] : describePromptFix(settings.prompt, prompt);
+    let { model, temperature } = settings;
+    const knowledgeGap = failing.some((result) => !result.output.knows) && readPrompt(prompt).hasLog;
+    if (knowledgeGap && LAB_MODELS[model].skill < LAB_MODELS.large.skill) {
+      model = "large";
+      notes.push(`The ${LAB_MODELS[settings.model].label} doesn't know some of these failure modes: switch back to the ${LAB_MODELS.large.label}`);
+    }
+    if (failing.some((result) => result.output.drifted) && temperature > 0) {
+      temperature = 0;
+      notes.push("The output drifts at high temperature: set it back to 0");
+    }
+    const changed = prompt !== settings.prompt || model !== settings.model || temperature !== settings.temperature;
+    if (!changed) notes.push("Nothing to change: these failures look flaky. Rerun before you touch the prompt.");
+    return { prompt, model, temperature, notes, changed };
+  }
+
+  function reviewComment(settings) {
+    const features = readPrompt(settings.prompt);
+    if (!features.safety) return "commented: the prompt no longer forbids destructive fixes";
+    if (features.friendly) return "commented: a tone rule may break JSON clients";
+    if (settings.model !== "large") return `commented: model changed to ${LAB_MODELS[settings.model].label}`;
+    return "commented: LGTM";
+  }
+
+  function initLab(root) {
+    const state = {
+      prompt: BASELINE_PROMPT,
+      model: "large",
+      temperature: 0,
+      results: [],
+      stale: true,
+      running: false,
+      selected: 0,
+      proposal: null,
+      threshold: DEFAULT_THRESHOLD,
+      stages: PIPELINE.map(() => ({ status: "idle", detail: "" })),
+      shipping: false,
+      blocked: "",
+      pr: 12,
+      versions: [{ label: "v1", rate: 100, model: "large" }],
+    };
+    const snapshot = () => ({ prompt: state.prompt, model: state.model, temperature: state.temperature });
+
+    const promptInput = h("textarea", { class: "lab-prompt", spellcheck: "false", "aria-label": "Prompt" });
+    const diffStat = h("span", { class: "lab-diffstat" });
+    const branchChip = h("span", { class: "lab-branch" });
+    const modelPicker = segmented(
+      Object.entries(LAB_MODELS).map(([id, model]) => [id, model.label]),
+      state.model,
+      (value) => {
+        state.model = value;
+        markStale();
+      },
+    );
+    const temperatureInput = slider({ min: "0", max: "2", step: "0.1", value: "0", label: "Temperature" });
+    const temperatureValue = h("strong");
+    const agentButton = button("Ask the agent to fix it", () => openProposal(), "is-agent");
+    const proposalBox = h("div", { class: "lab-proposal", hidden: true });
+
+    const runButton = button("Run evals", () => runLocal(), "is-primary");
+    const rateValue = h("span", { class: "lab-rate" });
+    const staleNote = h("div", { class: "lab-stale", text: "Changed since the last run: rerun the evals" });
+    const caseRows = LAB_CASES.map((testCase, index) => {
+      const icon = h("span", { class: "lab-case-icon" });
+      const reason = h("span", { class: "lab-case-reason" });
+      const row = button(
+        [icon, h("span", { class: "lab-case-body" }, h("span", { class: "lab-case-name", text: testCase.name }), reason)],
+        () => {
+          state.selected = index;
+          renderCases();
+          renderOutput();
+        },
+        "lab-case",
+      );
+      return { row, icon, reason };
+    });
+    const outputBox = h("div", { class: "lab-output" });
+
+    const prButton = button("Open PR", () => ship(), "is-primary");
+    const thresholdInput = slider({ min: "50", max: "100", step: "5", value: String(state.threshold), label: "Gate threshold" });
+    const thresholdValue = h("strong");
+    const stageRows = PIPELINE.map((stage) => {
+      const icon = h("span", { class: "lab-stage-icon" });
+      const detail = h("span", { class: "lab-stage-detail" });
+      const row = h("div", { class: "lab-stage" }, icon, h("span", { class: "lab-stage-body" }, h("span", { class: "lab-stage-name", text: stage.name }), detail));
+      return { row, icon, detail };
+    });
+    const blockedNote = h("div", { class: "lab-blocked" });
+    const chart = h("div", { class: "lab-chart" });
+
+    function markStale() {
+      state.stale = true;
+      state.proposal = null;
+      renderAll();
+    }
+
+    function setPrompt(value) {
+      state.prompt = value;
+      promptInput.value = value;
+      markStale();
+    }
+
+    function resetToMain() {
+      state.model = "large";
+      state.temperature = 0;
+      modelPicker.setActive("large");
+      temperatureInput.value = "0";
+      setPrompt(BASELINE_PROMPT);
+    }
+
+    function renderDevelop() {
+      const ops = lineDiff(BASELINE_PROMPT, state.prompt);
+      const added = ops.filter((op) => op.type === "add").length;
+      const removed = ops.filter((op) => op.type === "del").length;
+      const onMain = !added && !removed && state.model === "large" && state.temperature === 0;
+      branchChip.textContent = onMain ? "main" : "feature/explain-prompt";
+      fill(
+        diffStat,
+        onMain ? h("span", { class: "w-muted", text: "same as main" }) : null,
+        added ? h("span", { class: "lab-add", text: `+${added}` }) : null,
+        removed ? h("span", { class: "lab-del", text: `−${removed}` }) : null,
+        state.model !== "large" ? h("span", { class: "w-muted", text: `model ${LAB_MODELS[state.model].label}` }) : null,
+        state.temperature !== 0 ? h("span", { class: "w-muted", text: `temp ${state.temperature.toFixed(1)}` }) : null,
+      );
+      temperatureValue.textContent = state.temperature.toFixed(1);
+      const finished = state.results.length === LAB_CASES.length && state.results.every(Boolean);
+      agentButton.disabled = state.running || state.stale || !finished || state.results.every((result) => result.pass);
+      renderProposal();
+    }
+
+    function renderProposal() {
+      const proposal = state.proposal;
+      proposalBox.hidden = !proposal;
+      if (!proposal) return;
+      const diff = lineDiff(state.prompt, proposal.prompt).filter((op) => op.type !== "same");
+      fill(
+        proposalBox,
+        h("div", { class: "lab-proposal-head" }, h("span", { class: "w-avatar", text: "AI" }), h("strong", { text: "agent" }), h("span", { class: "w-muted", text: "proposes a change (simulated)" })),
+        h("ul", { class: "lab-notes" }, proposal.notes.map((note) => h("li", { text: note }))),
+        diff.length || proposal.model !== state.model || proposal.temperature !== state.temperature
+          ? h(
+              "div",
+              { class: "lab-diff" },
+              diff.map((op) => h("div", { class: `lab-diff-line is-${op.type}`, text: `${op.type === "add" ? "+" : "−"} ${op.text || " "}` })),
+              proposal.model !== state.model ? h("div", { class: "lab-diff-line is-add", text: `+ model: ${LAB_MODELS[proposal.model].label}` }) : null,
+              proposal.temperature !== state.temperature ? h("div", { class: "lab-diff-line is-add", text: `+ temperature: ${proposal.temperature}` }) : null,
+            )
+          : null,
+        h("div", { class: "lab-proposal-foot" }, h("span", { class: "w-muted", text: "The agent proposes. The gate decides." })),
+        h(
+          "div",
+          { class: "w-actions" },
+          proposal.changed ? button("Apply change", () => applyProposal(), "is-primary") : null,
+          button(proposal.changed ? "Discard" : "OK", () => {
+            state.proposal = null;
+            renderProposal();
+          }),
+        ),
+      );
+    }
+
+    function openProposal() {
+      state.proposal = proposeFix(snapshot(), state.results);
+      renderProposal();
+    }
+
+    function applyProposal() {
+      const { prompt, model, temperature } = state.proposal;
+      state.model = model;
+      state.temperature = temperature;
+      modelPicker.setActive(model);
+      temperatureInput.value = String(temperature);
+      setPrompt(prompt);
+    }
+
+    function renderCases() {
+      const finished = state.results.filter(Boolean);
+      rateValue.textContent = finished.length === LAB_CASES.length ? `${passRate(state.results)}%` : state.running ? "…" : "–";
+      rateValue.dataset.level = finished.length === LAB_CASES.length ? (passRate(state.results) >= state.threshold ? "ok" : "bad") : "idle";
+      staleNote.hidden = !state.stale || !state.results.length || state.running;
+      caseRows.forEach(({ row, icon, reason }, index) => {
+        const result = state.results[index];
+        const status = result ? (result.pass ? "pass" : "fail") : state.running ? "running" : "idle";
+        row.dataset.status = status;
+        row.classList.toggle("is-selected", index === state.selected);
+        icon.textContent = { idle: "○", running: "", pass: "✓", fail: "✗" }[status];
+        reason.textContent = result && !result.pass ? result.reason : "";
+      });
+      runButton.disabled = state.running;
+    }
+
+    function renderOutput() {
+      const testCase = LAB_CASES[state.selected];
+      const result = state.results[state.selected];
+      fill(
+        outputBox,
+        h("div", { class: "lab-output-head" }, h("strong", { text: testCase.name }), h("span", { class: "w-muted", text: "input" })),
+        h("div", { class: "lab-log", text: testCase.log }),
+        result
+          ? [
+              h("pre", { class: "lab-answer", text: result.output.text }),
+              h(
+                "div",
+                { class: "lab-asserts" },
+                result.assertions.map((assertion) =>
+                  h("span", {
+                    class: `lab-assert ${assertion.skipped ? "is-skip" : assertion.pass ? "is-pass" : "is-fail"}`,
+                    text: `${assertion.skipped ? "–" : assertion.pass ? "✓" : "✗"} ${assertion.name}`,
+                    title: assertion.detail,
+                  }),
+                ),
+              ),
+            ]
+          : h("div", { class: "lab-answer is-empty", text: "Run the evals to see the model's answer and every assertion." }),
+      );
+    }
+
+    function renderPipeline() {
+      thresholdValue.textContent = `${state.threshold}%`;
+      stageRows.forEach(({ row, icon, detail }, index) => {
+        const stage = state.stages[index];
+        row.dataset.status = stage.status;
+        icon.textContent = { idle: "○", queued: "○", running: "", pass: "✓", fail: "✗", skipped: "–" }[stage.status];
+        detail.textContent = stage.detail;
+      });
+      blockedNote.textContent = state.blocked;
+      blockedNote.hidden = !state.blocked;
+      prButton.disabled = state.shipping;
+      prButton.textContent = state.shipping ? `PR #${state.pr} running…` : "Open PR";
+    }
+
+    function renderVersions() {
+      const shown = state.versions.slice(-MAX_VERSIONS);
+      fill(
+        chart,
+        h(
+          "div",
+          { class: "lab-plot" },
+          h("div", { class: "lab-chart-line", style: `bottom: ${state.threshold}%`, title: "gate threshold" }),
+          shown.map((version) =>
+            h(
+              "div",
+              { class: "lab-bar" },
+              h(
+                "div",
+                { class: `lab-bar-fill${version.rate >= state.threshold ? "" : " is-bad"}`, style: `height: ${version.rate}%` },
+                h("span", { class: "lab-bar-value", text: `${version.rate}%` }),
+              ),
+              h("span", { class: "lab-bar-label", text: version.label }),
+            ),
+          ),
+        ),
+      );
+    }
+
+    function renderAll() {
+      renderDevelop();
+      renderCases();
+      renderOutput();
+      renderPipeline();
+      renderVersions();
+    }
+
+    async function runLocal() {
+      if (state.running) return;
+      state.running = true;
+      state.stale = false;
+      state.proposal = null;
+      state.results = new Array(LAB_CASES.length).fill(null);
+      renderAll();
+      await evaluateAll(snapshot(), (index, result) => {
+        state.results[index] = result;
+        renderCases();
+        if (index === state.selected) renderOutput();
+      });
+      state.running = false;
+      renderAll();
+    }
+
+    async function ship() {
+      if (state.shipping) return;
+      const settings = snapshot();
+      state.shipping = true;
+      state.pr += 1;
+      state.blocked = "";
+      state.stages = PIPELINE.map(() => ({ status: "queued", detail: "" }));
+      renderPipeline();
+      let ciRate = 0;
+      for (const [index, stage] of PIPELINE.entries()) {
+        state.stages[index] = { status: "running", detail: stage.id === "evals" ? `0/${LAB_CASES.length} cases` : "" };
+        renderPipeline();
+        if (stage.id === "evals") {
+          let done = 0;
+          const results = await evaluateAll(settings, (_, result) => {
+            if (!result) return;
+            done += 1;
+            state.stages[index].detail = `${done}/${LAB_CASES.length} cases`;
+            renderPipeline();
+          });
+          ciRate = passRate(results);
+          const passed = ciRate >= state.threshold;
+          const passedLocally = !state.stale && state.results.every(Boolean) && passRate(state.results) >= state.threshold;
+          state.stages[index] = {
+            status: passed ? "pass" : "fail",
+            detail: `${ciRate}% ${passed ? "≥" : "<"} ${state.threshold}%${!passed && passedLocally ? " · passed locally, outputs vary" : ""}`,
+          };
+          if (!passed) {
+            for (let rest = index + 1; rest < PIPELINE.length; rest += 1) state.stages[rest] = { status: "skipped", detail: "" };
+            state.blocked = `Merge blocked: required check ai-evals failed on PR #${state.pr}`;
+            state.shipping = false;
+            renderPipeline();
+            return;
+          }
+        } else {
+          await sleep(stage.ms);
+          const detail = stage.id === "review" ? reviewComment(settings) : stage.id === "merge" ? `PR #${state.pr} merged` : stage.detail;
+          state.stages[index] = { status: "pass", detail };
+        }
+        renderPipeline();
+      }
+      state.versions.push({ label: `v${state.versions.length + 1}`, rate: ciRate, model: settings.model });
+      state.shipping = false;
+      renderPipeline();
+      renderVersions();
+      confetti(root);
+    }
+
+    promptInput.value = state.prompt;
+    promptInput.addEventListener("input", () => {
+      state.prompt = promptInput.value;
+      markStale();
+    });
+    temperatureInput.addEventListener("input", () => {
+      state.temperature = Number(temperatureInput.value);
+      markStale();
+    });
+    thresholdInput.addEventListener("input", () => {
+      state.threshold = Number(thresholdInput.value);
+      renderCases();
+      renderPipeline();
+      renderVersions();
+    });
+
+    const column = (step, title, aside, ...children) =>
+      h("div", { class: "lab-col" }, h("div", { class: "lab-col-title" }, h("span", {}, h("span", { class: "lab-step", text: step }), title), aside), children);
+
+    root.append(
+      h(
+        "div",
+        { class: "lab-head" },
+        h("span", { class: "lab-title", text: "Eval Lab" }),
+        h("span", { class: "lab-sub", text: "Develop the /explain prompt, evaluate it, ship it" }),
+        h("span", { class: "w-grow" }),
+        h("span", { class: "lab-sim", text: "simulated · no real model calls" }),
+      ),
+      h(
+        "div",
+        { class: "lab-cols" },
+        column(
+          "1",
+          "Develop",
+          branchChip,
+          h("div", { class: "lab-file" }, h("span", { text: "prompts/explain.txt" }), diffStat),
+          promptInput,
+          h("div", { class: "lab-edits" }, PROMPT_EDITS.map(([label, edit]) => button(label, () => setPrompt(edit(state.prompt)))), button("Reset to main", resetToMain)),
+          h("div", { class: "lab-field" }, h("span", { class: "w-label", text: "Model" }), modelPicker),
+          h("div", { class: "lab-field" }, h("span", { class: "w-label", text: "Temperature" }), temperatureValue, temperatureInput),
+          agentButton,
+          proposalBox,
+        ),
+        column("2", "Evaluate", rateValue, h("div", { class: "lab-row" }, runButton, staleNote), h("div", { class: "lab-cases" }, caseRows.map(({ row }) => row)), outputBox),
+        column(
+          "3",
+          "Ship",
+          prButton,
+          h("div", { class: "lab-field" }, h("span", { class: "w-label", text: "Gate" }), h("span", { text: "pass rate ≥" }), thresholdValue, thresholdInput),
+          h("div", { class: "lab-stages" }, stageRows.map(({ row }) => row)),
+          blockedNote,
+          h("span", { class: "w-label", text: "Deployed versions · eval pass rate" }),
+          chart,
+        ),
+      ),
+    );
+    renderAll();
+  }
+
+  function mountLabs() {
+    for (const root of document.querySelectorAll(".lab[data-lab]")) initLab(root);
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mountLabs);
+  else mountLabs();
+})();
+
+</script>
+  <script>
+    const LAB_WIDTH = 1240;
+    const LAB_HEIGHT = 680;
+    const frame = document.querySelector(".lab-stage-frame");
+
+    function fitLab() {
+      const scale = Math.min(window.innerWidth / (LAB_WIDTH + 40), window.innerHeight / (LAB_HEIGHT + 40));
+      frame.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+
+    window.addEventListener("resize", fitLab);
+    document.addEventListener("keydown", (event) => {
+      if (event.key.toLowerCase() !== "t" || event.target.matches("textarea, input")) return;
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("deck-theme", next);
+    });
+    fitLab();
+  </script>
+</body>
+</html>

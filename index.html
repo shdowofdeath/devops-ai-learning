@@ -210,7 +210,8 @@ html:not(.print-pdf) .reveal .hljs {
 
 .reveal pre.compact { font-size: 0.56em; }
 .reveal pre.xcompact { font-size: 0.5em; }
-.reveal pre.wrap code { white-space: pre-wrap; }
+.reveal pre.wrap code,
+html:not(.print-pdf) .reveal pre.wrap .hljs { white-space: pre-wrap; }
 
 .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 0.32; }
 .reveal .hljs-ln-numbers { color: var(--code-muted); }
@@ -543,8 +544,8 @@ html:not(.print-pdf) .reveal .hljs {
 .reveal .tokens span:nth-child(5n + 4) { background: #fdd9e4; color: #7c0f30; }
 .reveal .tokens span:nth-child(5n + 5) { background: #dcebff; color: #0f3b78; }
 
-.reveal .stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
-.reveal .stack .layer {
+.reveal .ctx-stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
+.reveal .ctx-stack .layer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -554,9 +555,9 @@ html:not(.print-pdf) .reveal .hljs {
   border: 1px solid var(--border);
 }
 
-.reveal .stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
-.reveal .stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
-.reveal .stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
+.reveal .ctx-stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
+.reveal .ctx-stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .ctx-stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
 
 .reveal .harness {
   display: grid;
@@ -867,7 +868,7 @@ html:not(.print-pdf) .reveal .hljs {
   <div class="grid">
     <a class="item" href="deck.html">
       <strong>Presenter deck</strong>
-      <span>98 slides with speaker notes, playgrounds and deep dives. Press S for the speaker view, T for the dark theme, ↓ for a deep dive.</span>
+      <span>100 slides with speaker notes, playgrounds and deep dives. Press S for the speaker view, T for the dark theme, ↓ for a deep dive.</span>
     </a>
     <a class="item" href="run-sheet.html">
       <strong>Run sheet</strong>

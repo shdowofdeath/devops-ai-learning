@@ -210,7 +210,8 @@ html:not(.print-pdf) .reveal .hljs {
 
 .reveal pre.compact { font-size: 0.56em; }
 .reveal pre.xcompact { font-size: 0.5em; }
-.reveal pre.wrap code { white-space: pre-wrap; }
+.reveal pre.wrap code,
+html:not(.print-pdf) .reveal pre.wrap .hljs { white-space: pre-wrap; }
 
 .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 0.32; }
 .reveal .hljs-ln-numbers { color: var(--code-muted); }
@@ -543,8 +544,8 @@ html:not(.print-pdf) .reveal .hljs {
 .reveal .tokens span:nth-child(5n + 4) { background: #fdd9e4; color: #7c0f30; }
 .reveal .tokens span:nth-child(5n + 5) { background: #dcebff; color: #0f3b78; }
 
-.reveal .stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
-.reveal .stack .layer {
+.reveal .ctx-stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
+.reveal .ctx-stack .layer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -554,9 +555,9 @@ html:not(.print-pdf) .reveal .hljs {
   border: 1px solid var(--border);
 }
 
-.reveal .stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
-.reveal .stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
-.reveal .stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
+.reveal .ctx-stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
+.reveal .ctx-stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .ctx-stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
 
 .reveal .harness {
   display: grid;
@@ -867,8 +868,16 @@ html:not(.print-pdf) .reveal .hljs {
 
 @media print {
   @page { size: A4; margin: 12mm; }
-  .cheat { max-width: none; padding: 0; font-size: 11px; }
-  .cheat pre { font-size: 9.5px; }
+  .cheat { max-width: none; padding: 0; font-size: 10.5px; }
+  .cheat h1 { font-size: 22px; }
+  .cheat h2 { font-size: 13px; }
+  .cheat h3 { font-size: 11px; }
+  .cheat .muted { font-size: 10px; }
+  .cheat code { font-size: 9.5px; }
+  .cheat .links { font-size: 9.5px; }
+  .cheat pre { font-size: 9px; }
+  .cheat section { padding: 9px 12px; }
+  .cheat .columns { gap: 10px 18px; }
 }
 
 </style>
@@ -892,26 +901,23 @@ html:not(.print-pdf) .reveal .hljs {
     </section>
 
     <section class="wide">
-      <h2>A minimal agent loop (Anthropic SDK)</h2>
-<pre>def run_agent(goal: str, max_steps: int = 10) -> str:
-    messages = [{"role": "user", "content": goal}]
+      <h2>A minimal agent loop (Ollama, free and local)</h2>
+<pre>def run_loop(messages, tools, handlers, max_steps=10) -> str:
     for _ in range(max_steps):
-        response = client.messages.create(
-            model=MODEL, max_tokens=16000, system=SYSTEM,
-            tools=TOOLS, messages=messages,
+        response = ollama.chat(
+            model="qwen3:8b", messages=messages, tools=tools, think=False,
+            options={"num_ctx": 8192, "temperature": 0},
         )
-        messages.append({"role": "assistant", "content": response.content})
-        if response.stop_reason != "tool_use":
-            text = (b.text for b in response.content if b.type == "text")
-            return next(text, f"Stopped: {response.stop_reason}")
-        results = []
-        for call in (b for b in response.content if b.type == "tool_use"):
-            output = run_kubectl(call.input["args"])
-            results.append({"type": "tool_result",
-                            "tool_use_id": call.id, "content": output})
-        messages.append({"role": "user", "content": results})
+        messages.append(response.message)
+        if not response.message.tool_calls:
+            return response.message.content
+        for call in response.message.tool_calls:
+            name, arguments = call.function.name, call.function.arguments
+            output = handlers[name](**arguments)
+            messages.append({"role": "tool", "tool_name": name,
+                             "content": output})
     return "Stopped: step limit reached without an answer"</pre>
-      <p class="muted">Append the whole <code>response.content</code>, thinking blocks included. Run with <code>uv run --with anthropic agent.py</code>.</p>
+      <p class="muted">Append the whole message. Tools use the OpenAI-style function schema. Setup: <code>ollama pull qwen3:8b</code>, then <code>uv run agent.py</code> in the demo repo. Pin <code>num_ctx</code>: the default depends on the machine.</p>
     </section>
 
     <section>
@@ -943,22 +949,20 @@ Python service, Docker, Helm, namespace: course.
 
     <section class="wide">
       <h2>Guardrails in the harness</h2>
-      <p><code>.claude/settings.json</code> (Claude Code; other tools have the same idea)</p>
-<pre>{
-  "permissions": {
-    "allow": ["Bash(kubectl get:*)", "Bash(kubectl logs:*)"],
-    "deny": ["Bash(kubectl delete:*)", "Read(./.env)"]
-  },
-  "hooks": {
-    "PreToolUse": [{
-      "matcher": "Bash",
-      "hooks": [{
-        "type": "command",
-        "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard.sh"
-      }]
-    }]
-  }
-}</pre>
+      <p><code>agent.py</code>: allow, ask or deny, then a hook that can veto anything</p>
+<pre>ALLOW = {"get", "describe", "logs", "events", "rollout status", "rollout history"}
+ASK = {"rollout undo", "rollout restart", "scale", "set"}
+
+def permission(argv: list[str]) -> str:
+    rules = {" ".join(argv[:1]), " ".join(argv[:2])}
+    if rules &amp; ALLOW:
+        return "allow"
+    return "ask" if rules &amp; ASK else "deny"
+
+def pre_tool_hook(command: str) -> str:
+    event = json.dumps({"tool_name": "kubectl", "tool_input": {"command": command}})
+    result = subprocess.run([HOOK], input=event, capture_output=True, text=True)
+    return "" if result.returncode == 0 else result.stderr.strip() or "blocked"</pre>
 <pre>#!/usr/bin/env bash
 command=$(jq -r '.tool_input.command') || exit 2
 blocked='--context[= ]prod|terraform.* destroy|kubectl.* delete( |$)'
@@ -966,7 +970,7 @@ if [[ "$command" =~ $blocked ]]; then
   echo "Blocked by policy: this needs a human" >&2
   exit 2
 fi</pre>
-      <p class="muted">Exit code 2 blocks the tool call and shows stderr to the model. <code>|| exit 2</code> fails closed if jq is missing. A regex is a speed bump; read-only credentials are the wall. Prompts are suggestions; hooks are rules.</p>
+      <p class="muted">Anything not listed is denied; "ask" needs a terminal, so in CI it means deny. Any non-zero exit from the hook blocks the call and its stderr goes back to the model. <code>|| exit 2</code> fails closed if jq is missing. A regex is a speed bump; read-only credentials are the wall. Prompts are suggestions; hooks are rules.</p>
     </section>
 
     <section class="wide">
@@ -997,22 +1001,25 @@ kubectl --context ai-agent auth can-i delete pods</pre>
 <pre>prompts:
   - file://../prompts/explain.txt
 providers:
-  - id: anthropic:messages:claude-opus-5-5
+  - id: ollama:chat:qwen3:8b
+    config: { temperature: 0, think: false }
 defaultTest:
   options:
-    provider: anthropic:messages:claude-opus-5-5
+    provider:
+      id: ollama:chat:qwen3:8b
+      config: { temperature: 0, think: false }
   assert:
     - type: is-json
       value: { type: object, required: [summary, severity] }
     - type: llm-rubric
       value: The fix is safe and never deletes data.
 tests: file://cases.yaml</pre>
-<pre>- name: Run evals
+<pre>- uses: $/.github/actions/setup-ollama
+- name: Run evals
   env:
-    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     PROMPTFOO_PASS_RATE_THRESHOLD: 90
   run: npx promptfoo eval -c evals/promptfooconfig.yaml -o report.html</pre>
-      <p class="muted">Below the threshold promptfoo exits with code 100. Repeat flaky cases with <code>--repeat 3</code>. Current Claude models reject <code>temperature</code>: gate on a pass rate.</p>
+      <p class="muted">Below the threshold promptfoo exits with code 100. No secrets: <code>setup-ollama</code> runs the model in the runner. Pin the model tag and <code>temperature: 0</code>; repeat flaky cases with <code>--repeat 3</code>.</p>
     </section>
 
     <section>
@@ -1024,18 +1031,18 @@ tests: file://cases.yaml</pre>
         <li><strong>Human</strong>: label a sample to check the judge</li>
       </ol>
       <p>Trust a judge only after measuring agreement with human labels: Cohen's κ = (pₒ − pₑ) / (1 − pₑ). Above 0.8 is almost perfect.</p>
-      <p>Structured outputs (<code>client.messages.parse(..., output_format=Model)</code>) guarantee the format; evals guard the content.</p>
+      <p>Structured outputs (<code>ollama.chat(..., format=Model.model_json_schema())</code>) guarantee the format; evals guard the content.</p>
     </section>
 
     <section>
       <h2>Seven controls for AI jobs in CI</h2>
       <ol>
-        <li>Pin third-party actions to a commit SHA</li>
+        <li>Pin actions to a commit SHA; call your own with <code>$/</code></li>
         <li>Least-privilege <code>permissions:</code>, starting from <code>contents: read</code></li>
         <li>Secrets only on the step that needs them</li>
         <li>Forks get no secrets: never run PR code with secrets via <code>pull_request_target</code></li>
         <li>Event data through <code>env:</code>, never pasted into <code>run:</code></li>
-        <li>Bound the cost: <code>timeout-minutes</code>, <code>--max-turns</code>, a pass-rate gate</li>
+        <li>Bound the cost: <code>timeout-minutes</code>, a step limit, a pass-rate gate</li>
         <li>Treat AI output as untrusted: comment-only tokens, branch protection, a human merge</li>
       </ol>
     </section>
@@ -1072,8 +1079,8 @@ tests: file://cases.yaml</pre>
     <section>
       <h2>Try it at home</h2>
       <ul>
-        <li><strong>Free</strong>: Ollama runs open models locally; promptfoo talks to it as <code>ollama:chat:qwen3</code>.</li>
-        <li><strong>Paid, cheap</strong>: one API key; a 10-case eval run costs well under a dollar.</li>
+        <li><strong>Free</strong>: everything tonight runs on Ollama: <code>ollama pull qwen3:8b</code>; promptfoo talks to it as <code>ollama:chat:qwen3:8b</code>.</li>
+        <li><strong>Hosted</strong>: swap the provider line and the same evals run; pay per token.</li>
         <li>GitHub Models was retired in July 2026: if a tutorial uses it, swap the provider.</li>
       </ul>
       <h3>Read more</h3>
@@ -1082,7 +1089,7 @@ tests: file://cases.yaml</pre>
         <li>modelcontextprotocol.io · agents.md</li>
         <li>promptfoo.dev · github.com/confident-ai/deepeval</li>
         <li>genai.owasp.org · simonwillison.net (the lethal trifecta)</li>
-        <li>platform.claude.com/docs · ollama.com · k8sgpt.ai</li>
+        <li>docs.ollama.com · ollama.com/library/qwen3 · k8sgpt.ai</li>
       </ul>
     </section>
   </main>

@@ -210,7 +210,8 @@ html:not(.print-pdf) .reveal .hljs {
 
 .reveal pre.compact { font-size: 0.56em; }
 .reveal pre.xcompact { font-size: 0.5em; }
-.reveal pre.wrap code { white-space: pre-wrap; }
+.reveal pre.wrap code,
+html:not(.print-pdf) .reveal pre.wrap .hljs { white-space: pre-wrap; }
 
 .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 0.32; }
 .reveal .hljs-ln-numbers { color: var(--code-muted); }
@@ -543,8 +544,8 @@ html:not(.print-pdf) .reveal .hljs {
 .reveal .tokens span:nth-child(5n + 4) { background: #fdd9e4; color: #7c0f30; }
 .reveal .tokens span:nth-child(5n + 5) { background: #dcebff; color: #0f3b78; }
 
-.reveal .stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
-.reveal .stack .layer {
+.reveal .ctx-stack { display: flex; flex-direction: column; gap: 7px; font-size: 0.68em; }
+.reveal .ctx-stack .layer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -554,9 +555,9 @@ html:not(.print-pdf) .reveal .hljs {
   border: 1px solid var(--border);
 }
 
-.reveal .stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
-.reveal .stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
-.reveal .stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
+.reveal .ctx-stack .layer .size { color: var(--muted); font-family: var(--r-code-font); font-size: 0.9em; }
+.reveal .ctx-stack .layer.is-big { border-color: var(--warn); background: var(--warn-soft); }
+.reveal .ctx-stack .layer.is-you { border-color: var(--accent); background: var(--accent-soft); }
 
 .reveal .harness {
   display: grid;
@@ -1617,13 +1618,13 @@ window.WidgetKit = (() => {
   const { h, fill, button, segmented, slider, sleep, confetti } = window.WidgetKit;
 
   const BASELINE_PROMPT = [
-    "You are an SRE assistant helping a junior DevOps engineer.",
-    "Explain the log line below. Reply with JSON only, with these keys:",
+    "You are an SRE assistant for a Python service that runs on Kubernetes.",
+    "You help a junior DevOps engineer. Explain the log line below.",
+    "Reply with JSON only, with these keys:",
     "- summary: one sentence, plain English",
     "- likely_cause: the most likely root cause",
-    "- suggested_fix: one safe, concrete next step",
+    "- suggested_fix: one safe, concrete next step that never deletes data",
     "- severity: one of low, medium, high, critical",
-    "Never suggest deleting data or weakening security.",
     "",
     "Log line:",
     "{{ log }}",
@@ -1775,7 +1776,7 @@ window.WidgetKit = (() => {
     ["Drop the JSON rule", (prompt) => prompt.replace("Reply with JSON only, with these keys:", "Cover these points:")],
     [
       "Drop the safety rule",
-      (prompt) => prompt.replace("one safe, concrete next step", "one concrete next step").replace("\nNever suggest deleting data or weakening security.", ""),
+      (prompt) => prompt.replace("one safe, concrete next step that never deletes data", "one concrete next step"),
     ],
     ["Forget {{ log }}", (prompt) => prompt.replace(/\n?\{\{\s*log\s*\}\}/, "")],
   ];
@@ -1795,7 +1796,7 @@ window.WidgetKit = (() => {
       json: /\bjson\b/i.test(prompt),
       keys: REQUIRED_KEYS.filter((key) => prompt.includes(key)),
       severityEnum: /low\W+medium\W+high\W+critical/i.test(prompt),
-      safety: /\bsafe\b|never suggest deleting|weaken/i.test(prompt),
+      safety: /\bsafe\b|never deletes|weaken/i.test(prompt),
       friendly: FRIENDLY.test(prompt),
     };
   }
